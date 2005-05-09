@@ -1,0 +1,26 @@
+CONTENTS
+========
+
+base.img.gz is a gziped vfat filesystem with:
+
+- grub boot sector
+- boot directory hosting grub configuration
+
+One only needs to add a /funk kernel to the base image in order to
+get a bootable floppy image.
+
+MODIFICATION
+============
+
+To modify base.img.gz, run the following steps (as root):
+
+- 1) gunzip base.img.gz
+- 2) mkdir base_tmp
+- 3) mount -t vfat -o loop base.img base_tmp
+- 4) ... apply changes in base_tmp ...
+- 5) dd if=/dev/zero of=base_tmp/fill; sync; rm -f base_tmp/fill
+- 6) gzip -9 < base.img > base.img.gz
+- 7) rmdir base_tmp
+
+In particular, the fifth step ensures the compression of the filesystem
+will be reasonably accurate.

@@ -1,0 +1,70 @@
+Misc
+====
+* Ctrl-Alt-Suppr and even Sysrq in the keyboard IRQ handler.
+* ISA detection ? << does not make sense
+* Mouse support.
+* Put the IO functions in a separate module (and not in Funk).
+* Implement %f in printf.
+* Correct gettimeofday, usleep, etc. using the exact proc freq.
+* Merge CLOCK_TICK_RATE from cpu_stubs.c with clock_tick_rate from Sound.ml.
+* Merge rdtsc from cpu_stubs.c with rdtsc from ticks.h.
+* Finish and improve the PCI IDS parser.
+* Moving IDS to a file is currently commented in gen_pci_ids.pl and pci_ids.ml.in
+  since it's a little bit slow in emulators.
+* Set the timer frequency (and use it for beep):
+<youpi>  icompteur := 1193180 DIV Freq;
+<youpi>  Port[$43] := $36;
+<youpi>  Port[$40] := Lo(Icompteur);
+<youpi>  Port[$40] := Hi(Icompteur);
+* Syscalls
+* Processes
+
+IPC
+===
+* All communications between servers and the kernel should go through IPC.
+  An IPC is a name + 1 argument (which may be a tuple) + the type of the
+  argument.
+* Make a thread safe marshall.
+
+Threads
+=======
+* Make sure that semaphores are registred in the GC.
+* Make Condition variables and use them in Irq.
+
+Makefiles & docs
+================
+* Make target to clean *~ *# #* .#* temporary files ?
+
+Console
+=======
+* Move the keyboard code to keyboard.ml.
+* Make a keyboard handler in caml.
+* Generalize Console.get_current_console () and co to support
+  reading and writing from files.
+* Bind libreadline.
+* Implement ^D in the shell to allow a nice 'cat > file'
+* Store cursor position in console and move it with left / right.
+* History.
+
+CPU
+===
+* Detect other CPUs.
+* Move reboot code from shell.ml to something ARCH specific.
+
+VFS
+=====
+* virtualize string and dynarray used in ramfs types
+* virtualize all exported type and defined gid_of_string and co
+* handle exceptions in high-level functions
+* support special files
+* parse symbolic arguments for chmod
+* replace assert false with something else
+* add something like df/mount
+* FS specific interface
+  - get blksize
+  - get root ino
+  - get size/mode/uid/gid/atime/mtime/ctime
+  - get dir childrens dentry (with their inodes)
+  - get file blocks
+* hash inode and dentry in vfs, fill inode at read_inode
+  and dentry ad lookup, and move current structure to ramfs

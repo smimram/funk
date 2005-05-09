@@ -1,0 +1,73 @@
+Specifications
+==============
+
+* everything:
+- http://www.tldp.org/LDP/tlk/tlk-toc.html
+- http://www.osdever.net/
+- http://mega-tokyo.com/osfaq2/
+- http://my.execpc.com/~geezer/osd/
+- http://www.openbg.net/sto/os/implement/
+
+* OS examples:
+- /usr/src/linux
+- http://www.google.fr/url?sa=U&start=1&q=http://kos.enix.org/index.php%3Flang%3Den&e=9888
+- http://www.planet-source-code.com/vb/scripts/ShowCode.asp?txtCodeId=4513&lngWId=3
+- http://www.cs.utah.edu/flux/oskit/
+- http://www.macs.hw.ac.uk/~sebc/hOp/
+
+* BIOS interruptions:
+- http://www.ctyme.com/rbrown.htm
+
+* I/O ports:
+- http://www.sxlist.com/techref/ios.htm
+- http://www.ecst.csuchico.edu/~dranch/HARDWARE/irqs-dma-ioports.txt
+
+* VGA:
+- http://brackeen.com/home/vga/
+
+* DMA:
+- http://www.inversereality.org/tutorials/sound%20programming/DMAProgramming.html
+- http://www.xaff.org/GI/dma.html
+
+* floppy disk:
+- http://www.koders.com/c/fid15B00AC486EC8764588D6524C759BBCC68A781AF.aspx
+- http://perso.ens-lyon.fr/nicolas.guenot/floppy.pdf
+- cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/freedos-32 co -P floppy
+
+* FAT:
+- http://www.win.tue.nl/~aeb/linux/fs/fat/fat.html
+- http://www.ntfs.com/fat-systems.htm
+- http://www.rose-hulman.edu/class/csse/csse332/0405c/www/projects.html
+
+* Keyboard:
+- http://www.arl.wustl.edu/~lockwood/class/cs306/books/artofasm/Chapter_20/CH20-1.html#top
+- http://www.win.tue.nl/~aeb/linux/kbd/scancodes.html
+
+* Serial port:
+- http://www.beyondlogic.org/serial/serial.htm
+
+* PS2:
+- http://www.win.tue.nl/~aeb/linux/kbd/scancodes-12.html
+- http://colas.nahaboo.net/mouse-wheel-scroll/psaux.c-with-INTELLIMOUSE-ps2
+- http://www.computer-engineering.org/ps2mouse/
+
+* [S]ATA[PI]:
+- http://www.t13.org/project/d1153r18-ATA-ATAPI-4.pdf
+- http://www.t13.org/
+- http://www.ata-atapi.com/
+
+* PCI:
+- http://tesla.desy.de/doocs/hardware/pci/pci21.pdf
+- http://www.pcisig.com/specifications/conventional/ (not-free)
+- http://members.datafast.net.au/dft0802/specs.htm
+
+* cpuid:
+- http://www.paradicesoftware.com/specs/cpuid/
+- http://www.sandpile.org/
+
+* inline assembly with GCC:
+- http://www.ibiblio.org/gferg/ldp/GCC-Inline-Assembly-HOWTO.html#s3
+
+* TCP/IP:
+- http://www.vijaymukhi.com/vmis/roll.htm
+- http://www.sics.se/~adam/uip/download.html

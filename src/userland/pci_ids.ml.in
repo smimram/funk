@@ -1,0 +1,79 @@
+let pos = ref 0
+
+let re_vendor = Str.regexp "^\\([^ ]+\\)[ ]+\\(.*\\)$"
+
+let iter_ids f =
+  pos := 0;
+  let loop = ref true in
+# replace with this to read from the file
+# let loop = ref true and ids = Filecmds.cat_from_file "pci.ids" in
+    try
+      while !loop
+      do
+	let n = String.index_from ids !pos '\n' in
+	let ln = String.sub ids !pos (n - !pos) in
+	  pos := n + 1;
+	  (* Printf.printf "ln: %s\n%!" ln; *)
+	  if String.length ln <> 0 && ln.[0] <> '#' then
+	    loop := not (f ln)
+      done
+    with Not_found -> ()
+
+let string_of_vendor vendor =
+  let ans = ref "Unknown vendor" in
+    iter_ids
+      (fun ln ->
+	 if ln.[0] <> '\t' && ln.[0] <> 'C' then
+	   if Str.string_match re_vendor ln 0 && vendor = int_of_string ("0x" ^ Str.matched_group 1 ln) then
+	     (
+	       ans := Str.matched_group 2 ln;
+	       true
+	     )
+	   else
+	     false
+	 else
+	   false
+      );
+    !ans
+
+let string_of_device vendor device =
+  "Unknown device"
+
+let re_class= Str.regexp "^C \\([^ ]+\\)[ ]+\\(.*\\)$"
+
+let string_of_class cls =
+  let ans = ref "Unknown class" in
+    iter_ids
+      (fun ln ->
+	 if ln.[0] <> '\t' then
+	   if Str.string_match re_class ln 0 && cls = int_of_string ("0x" ^ Str.matched_group 1 ln) then
+	     (
+	       ans := Str.matched_group 2 ln;
+	       true
+	     )
+	   else
+	     false
+	 else
+	   false
+      );
+    !ans
+
+let string_of_subclass cls subclass =
+  "Unknown subclass"
+
+let string_of_unit u =
+  Printf.sprintf "0000:%02x:%02x.%01x " u.Pci.bus u.Pci.unt u.Pci.funct ^
+  (try
+     string_of_class u.Pci.baseclass
+   with Not_found -> "Unknown class"
+  ) ^ " " ^
+  (try
+     "(" ^ string_of_subclass u.Pci.baseclass u.Pci.subclass ^ ")"
+   with Not_found -> ""
+  ) ^ ": " ^
+  (try
+    string_of_vendor u.Pci.vendor
+   with Not_found -> "Unknown vendor") ^ " " ^
+  (try
+     string_of_device u.Pci.vendor u.Pci.device
+   with Not_found -> "Unknown device")

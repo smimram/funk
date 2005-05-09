@@ -1,0 +1,68 @@
+The funk kernel: a functional kernel
+====================================
+
+This kernel aims at being a working kernel with processes
+and system calls, but the thing which makes it different
+from other kernels is that it is mainly written using
+the OCaml language, which is functional (by the way, it's
+a micro-kernel, because monolithic kernels are just bad).
+
+It's exclusively intended to be a bad joke which means that
+you should not expect it to be:
+- fast,
+- secure,
+- useful,
+- etc.
+
+
+Current status
+==============
+
+Only the i386 architecture is supported for now. Here is what's
+currently working:
+- a basic shell/console with keyboard input
+- a RAM filesystem over a Virtual filesystem (VFS)
+- kernel threads
+- CPU detection
+- PCI devices detection
+
+
+Prerequisities
+==============
+
+To compile the kernel you will need:
+
+- OCaml 3.08
+- findlib
+- extlib
+- mcopy
+
+With Debian the required packages are therefore: ocaml-nox, ocaml-findlib,
+libextlib-ocaml-dev and mtools.
+
+With Gentoo the required packages are : dev-lang/ocaml, findlib, extlib and
+mtools.
+
+
+Testing the kernel
+==================
+
+To test the kernel you must
+
+1. build the kernel
+
+make
+
+2. launch the simulation
+
+make qemu
+
+(you need qemu for that)
+
+2'. alternatively you can run a simulation with bochs
+
+make bochs
+
+2''. or in a console
+
+make qemuconsole

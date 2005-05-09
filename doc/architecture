@@ -1,0 +1,45 @@
+C side
+======
+
+
+Caml side
+=========
+setjmp / longjmp / setstack
+---------------------------
+This should be implemented in C and binded from caml.
+
+
+Threads
+-------
+Threads will be reimplemented from scratch (cf otherlibs/systhreads/posix.c).
+
+Rationale: Thread uses Unix and we don't want to bind the whole world.
+
+
+=========================
+| ARCHITECTURE DU NOYAU |
+=========================
+
+le noyau fournit 4 services :
+
+* il fait le changement de contexte entre deux processus
+* il fournit les primitives d'IPC
+* il fournit des fonctions d'acces aux ports
+* il fait remonter les messages du materiel jusqu'au userland
+
+donc, on a:
+--> un appel systeme switch() permettant de commuter l'exection de
+    deux processus (avec sauvegarde du contexte).
+--> des appels systeme qui permettent a un processus d'envoyer des
+    signaux et/ou messages a un autre processus (et de les recevoir).
+--> des appels systeme qui permettent a un processus de demander les
+    droits en lecture et/ou ecriture sur un port ou une plage de ports.
+--> des gestionnaires d'interruptions associes a un mecanisme qui signale
+    une interruption au serveur concerne.
+
+au final: au maximum un petite dizaine d'appels systeme, et le noyau ne
+          contient que la structure de description du processus en cours
+          d'execution, ainsi que des tables permettant de retrouver le
+          processus associe a une interruption donnee (les droits du
+          processus sont contenus dans la structure de description).
+
