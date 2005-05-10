@@ -84,7 +84,7 @@ void kernel_entry(unsigned long magic,unsigned long addr)
   /* clean bss */
   memset(&__bss_start,0,&__bss_end-&__bss_start); 
   /* gcc seems bugged and move some of the following affectations *before* memset... */
-  __asm__ __volatile__("" : : : "memory");
+  wmb();
   /* TODO: more accurate value */
   mem_size = (unsigned long)(&_begin+block_size);
   heap = &_end;

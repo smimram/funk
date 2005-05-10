@@ -45,3 +45,8 @@ static __inline__ void sti(void)
 }
 
 #define fastcall __attribute__((regparm(3)))
+
+/* nothing particular on x86 */
+#define mb()	__asm__ __volatile__("" : : : "memory")
+#define wmb()	mb()
+#define rmb()	mb()
