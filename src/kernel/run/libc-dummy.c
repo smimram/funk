@@ -317,6 +317,15 @@ void* malloc(size_t size)
   return ans;
 }
 
+
+void free(void *ptr)
+{
+#ifdef DEBUG
+  c_printf("free(%p) called\n",ptr);
+#endif
+}
+
+#endif
 void* malloc_frame_aligned(size_t size)
 {
   int offs = (int)heap % FRAME_SIZE;
@@ -328,13 +337,6 @@ void* malloc_frame_aligned(size_t size)
   return (malloc(size));
 }
 
-void free(void *ptr)
-{
-#ifdef DEBUG
-  c_printf("free(%p) called\n",ptr);
-#endif
-}
-#endif
 
 void *realloc(void *ptr, size_t size)
 {
