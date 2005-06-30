@@ -1,3 +1,6 @@
+(* NB : this file is the old api, needs to be changed according
+* to our new architecture *)
+
 (**
   * Functions for handling inter-process communications (IPC).
   *

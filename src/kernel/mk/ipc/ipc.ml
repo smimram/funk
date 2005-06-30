@@ -1,3 +1,4 @@
+(* Old API *)
 (** Internal representation of caml types. *)
 type type_t =
   | Int (** an integer *)

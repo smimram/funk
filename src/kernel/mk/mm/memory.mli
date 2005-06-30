@@ -28,8 +28,8 @@ val to_string : t -> string
 (** [setb mem n val] sets the [n]-th byte of [mem]. *)
 val setb : t -> int -> int -> unit
 
-(** [setb mem n val] sets the [n]-th word of [mem]. *)          
-val setb : t -> int -> int -> unit
+(** [setw mem n val] sets the [n]-th word of [mem]. *)          
+val setw : t -> int -> int -> unit
 
 (** [memset mem pos len val] fills memory [mem] with [len] bytes [val] starting
   * at position [pos]. *)
