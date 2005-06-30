@@ -41,7 +41,8 @@ OCAMLPACKAGES	= "str extlib"
 CC       = gcc
 CFLAGS  += -ansi -Wall -Os -fomit-frame-pointer -g
 CPPFLAGS += -DCAML_NAME_SPACE -Irun/$(ARCH) -I$(CAMLLIB) -Irun/include
-OCAMLINCDIRS = -I mk -I mk/mm -I mk/ipc -I ../servers -I ../userland
+OCAMLINCDIRS = -I mk -I mk/mm -I mk/ipc -I mk/proc \
+	       -I mk/perms -I ../servers -I ../userland
 OCAMLFINDPARAMS = -package $(OCAMLPACKAGES)
 OCAMLOPT = ocamlfind ocamlopt $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
 OCAMLLEX = ocamllex
@@ -77,18 +78,21 @@ MK_C	 = $(wildcard mk/*.c) $(wildcard mk/mm/*.c)
 MK_OBJS	 = $(MK_C:.c=.o)
 OBJS	 = $(MAIN_RUN_OBJS) $(ARCH_RUN_OBJS) $(MK_OBJS)
 
-EXTERNAL_ML	= ../servers/vfs.ml ../servers/ramfs.ml ../userland/file.ml ../userland/filecmds.ml ../userland/pci_ids.ml ../userland/sound.ml
-ML	 = mk/vfs_defs.ml mk/funk.ml mk/mm/memory.ml mk/kThread.ml mk/irq.ml \
-	   mk/ipc/ipc.ml mk/ipc/mbox.ml mk/mouse.ml mk/cpu.ml mk/dma.ml \
-	   mk/pci.ml mk/ne2k.ml mk/cirrusfb.ml \
-	   mk/ide.ml mk/floppy.ml \
-	   mk/inputmap_fr_latin1.ml mk/keyboard.ml mk/serial.ml mk/console.ml \
-	   $(EXTERNAL_ML) \
-	   mk/shell_parser.ml mk/shell_lexer.ml mk/shell.ml \
-	   mk/mlkernel.ml
+EXTERNAL_ML = ../servers/vfs.ml ../servers/ramfs.ml ../userland/file.ml \
+	      ../userland/filecmds.ml ../userland/pci_ids.ml ../userland/sound.ml
+ML	    = mk/vfs_defs.ml mk/funk.ml mk/misc.ml mk/mm/memory.ml mk/mm/mm.ml \
+	      mk/kThread.ml mk/irq.ml mk/ipc/ipc.ml mk/ipc/mbox.ml mk/mouse.ml \
+	      mk/cpu.ml mk/dma.ml mk/perms/perms.ml mk/proc/process.ml \
+	      mk/pci.ml mk/ne2k.ml mk/cirrusfb.ml \
+	      mk/ide.ml mk/floppy.ml \
+	      mk/inputmap_fr_latin1.ml mk/keyboard.ml mk/serial.ml mk/console.ml \
+	      $(EXTERNAL_ML) \
+	      mk/shell_parser.ml mk/shell_lexer.ml mk/shell.ml \
+	      mk/mlkernel.ml
 EXTERNAL_MLI	= $(wildcard ../servers/*.mli ../userland/*.mli)
 MLI	 = $(wildcard mk/*.mli) $(wildcard mk/mm/*.mli) \
-	   $(wildcard mk/ipc/*.mli) $(EXTERNAL_MLI)
+	   $(wildcard mk/ipc/*.mli) $(wildcard mk/perms/*.mli) \
+	   $(wildcard mk/proc/*.mli) $(EXTERNAL_MLI)
 CMX	 = $(ML:.ml=.cmx)
 CMXA	 =
 
@@ -130,7 +134,9 @@ $(LIBOCAML): $(CMX) $(OCAMLWRAPPER) $(OCAMLKERNEL)
 	$(OCAMLLEX) $<
 
 clean:
-	rm -f run/*.o run/*.a run/*/*.o mk/*.cm* mk/*.o $(KERNEL) \
+	rm -f run/*.o run/*.a run/*/*.o mk/*.cm* mk/*.o mk/ipc/*.cm* mk/ipc/*.o \
+	mk/mm/*.cm* mk/mm/*.o mk/perms/*.cm* mk/perms/*.o mk/proc/*.cm* \
+	mk/proc/*.o $(KERNEL) \
 	mk/shell_lexer.ml mk/shell_parser.ml shell_parser.mli \
 	../servers/*.cm* ../servers/*.o ../userland/*.cm* ../userland/*.o \
 	.depend
