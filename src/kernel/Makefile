@@ -41,7 +41,7 @@ OCAMLPACKAGES	= "str extlib"
 CC       = gcc
 CFLAGS  += -ansi -Wall -Os -fomit-frame-pointer -g
 CPPFLAGS += -DCAML_NAME_SPACE -Irun/$(ARCH) -I$(CAMLLIB) -Irun/include
-OCAMLINCDIRS = -I mk -I ../servers -I ../userland
+OCAMLINCDIRS = -I mk -I mk/mm -I mk/ipc -I ../servers -I ../userland
 OCAMLFINDPARAMS = -package $(OCAMLPACKAGES)
 OCAMLOPT = ocamlfind ocamlopt $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
 OCAMLLEX = ocamllex
@@ -73,13 +73,13 @@ MAIN_RUN_C	= $(wildcard run/*.c)
 # run/libc-dummy.o run/kernel.o run/output.o run/input.o run/vsnprintf.o
 MAIN_RUN_OBJS	= $(MAIN_RUN_C:.c=.o)
 ARCH_RUN_OBJS	= run/$(ARCH)/boot.o run/$(ARCH)/setup.o run/$(ARCH)/entry.o
-MK_C	 = $(wildcard mk/*.c)
+MK_C	 = $(wildcard mk/*.c) $(wildcard mk/mm/*.c)
 MK_OBJS	 = $(MK_C:.c=.o)
 OBJS	 = $(MAIN_RUN_OBJS) $(ARCH_RUN_OBJS) $(MK_OBJS)
 
 EXTERNAL_ML	= ../servers/vfs.ml ../servers/ramfs.ml ../userland/file.ml ../userland/filecmds.ml ../userland/pci_ids.ml ../userland/sound.ml
-ML	 = mk/vfs_defs.ml mk/funk.ml mk/memory.ml mk/kThread.ml mk/irq.ml mk/ipc.ml \
-	   mk/mouse.ml mk/cpu.ml mk/dma.ml \
+ML	 = mk/vfs_defs.ml mk/funk.ml mk/mm/memory.ml mk/kThread.ml mk/irq.ml \
+	   mk/ipc/ipc.ml mk/ipc/mbox.ml mk/mouse.ml mk/cpu.ml mk/dma.ml \
 	   mk/pci.ml mk/ne2k.ml mk/cirrusfb.ml \
 	   mk/ide.ml mk/floppy.ml \
 	   mk/inputmap_fr_latin1.ml mk/keyboard.ml mk/serial.ml mk/console.ml \
@@ -87,7 +87,8 @@ ML	 = mk/vfs_defs.ml mk/funk.ml mk/memory.ml mk/kThread.ml mk/irq.ml mk/ipc.ml \
 	   mk/shell_parser.ml mk/shell_lexer.ml mk/shell.ml \
 	   mk/mlkernel.ml
 EXTERNAL_MLI	= $(wildcard ../servers/*.mli ../userland/*.mli)
-MLI	 = $(wildcard mk/*.mli) $(EXTERNAL_MLI)
+MLI	 = $(wildcard mk/*.mli) $(wildcard mk/mm/*.mli) \
+	   $(wildcard mk/ipc/*.mli) $(EXTERNAL_MLI)
 CMX	 = $(ML:.ml=.cmx)
 CMXA	 =
 
