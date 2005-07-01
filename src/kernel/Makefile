@@ -41,8 +41,8 @@ OCAMLPACKAGES	= "str extlib"
 CC       = gcc
 CFLAGS  += -ansi -Wall -Os -fomit-frame-pointer -g
 CPPFLAGS += -DCAML_NAME_SPACE -Irun/$(ARCH) -I$(CAMLLIB) -Irun/include
-OCAMLINCDIRS = -I mk -I mk/mm -I mk/ipc -I mk/proc \
-	       -I mk/perms -I ../servers -I ../userland
+OCAMLINCDIRS = -I mk -I mk/mm -I mk/ipc -I mk/proc -I mk/perms \
+	       -I ../servers -I ../userland -I ../drivers
 OCAMLFINDPARAMS = -package $(OCAMLPACKAGES)
 OCAMLOPT = ocamlfind ocamlopt $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
 OCAMLLEX = ocamllex
@@ -74,25 +74,26 @@ MAIN_RUN_C	= $(wildcard run/*.c)
 # run/libc-dummy.o run/kernel.o run/output.o run/input.o run/vsnprintf.o
 MAIN_RUN_OBJS	= $(MAIN_RUN_C:.c=.o)
 ARCH_RUN_OBJS	= run/$(ARCH)/boot.o run/$(ARCH)/setup.o run/$(ARCH)/entry.o
-MK_C	 = $(wildcard mk/*.c) $(wildcard mk/mm/*.c)
+MK_C	 = $(wildcard mk/*.c mk/mm/*.c ../drivers/*.c)
 MK_OBJS	 = $(MK_C:.c=.o)
 OBJS	 = $(MAIN_RUN_OBJS) $(ARCH_RUN_OBJS) $(MK_OBJS)
 
+DRIVERS_PREFIX = ../drivers/
+DRIVERS_FILES  = mouse.ml cpu.ml dma.ml pci.ml ne2k.ml cirrusfb.ml ide.ml \
+		 floppy.ml inputmap_fr_latin1.ml keyboard.ml serial.ml console.ml \
+		 shell_parser.ml shell_lexer.ml shell.ml
+DRIVERS_ML  = $(foreach file,$(DRIVERS_FILES),$(DRIVERS_PREFIX)$(file))
 EXTERNAL_ML = ../servers/vfs.ml ../servers/ramfs.ml ../userland/file.ml \
 	      ../userland/filecmds.ml ../userland/pci_ids.ml ../userland/sound.ml
-ML	    = mk/vfs_defs.ml mk/funk.ml mk/misc.ml mk/mm/memory.ml mk/mm/mm.ml \
-	      mk/kThread.ml mk/irq.ml mk/ipc/ipc.ml mk/ipc/mbox.ml mk/mouse.ml \
-	      mk/cpu.ml mk/dma.ml mk/perms/perms.ml mk/proc/process.ml \
-	      mk/pci.ml mk/ne2k.ml mk/cirrusfb.ml \
-	      mk/ide.ml mk/floppy.ml \
-	      mk/inputmap_fr_latin1.ml mk/keyboard.ml mk/serial.ml mk/console.ml \
+ML	    = ../drivers/vfs_defs.ml mk/funk.ml mk/misc.ml mk/mm/memory.ml mk/mm/mm.ml \
+	      mk/kThread.ml mk/irq.ml mk/ipc/ipc.ml mk/ipc/mbox.ml \
+	      mk/perms/perms.ml mk/proc/process.ml \
 	      $(EXTERNAL_ML) \
-	      mk/shell_parser.ml mk/shell_lexer.ml mk/shell.ml \
+	      $(DRIVERS_ML) \
 	      mk/mlkernel.ml
-EXTERNAL_MLI	= $(wildcard ../servers/*.mli ../userland/*.mli)
-MLI	 = $(wildcard mk/*.mli) $(wildcard mk/mm/*.mli) \
-	   $(wildcard mk/ipc/*.mli) $(wildcard mk/perms/*.mli) \
-	   $(wildcard mk/proc/*.mli) $(EXTERNAL_MLI)
+EXTERNAL_MLI = $(wildcard ../servers/*.mli ../userland/*.mli ../drivers/*.mli)
+MLI	 = $(wildcard mk/*.mli mk/mm/*.mli mk/ipc/*.mli mk/perms/*.mli mk/proc/*.mli) \
+	   $(EXTERNAL_MLI)
 CMX	 = $(ML:.ml=.cmx)
 CMXA	 =
 
@@ -136,8 +137,8 @@ $(LIBOCAML): $(CMX) $(OCAMLWRAPPER) $(OCAMLKERNEL)
 clean:
 	rm -f run/*.o run/*.a run/*/*.o mk/*.cm* mk/*.o mk/ipc/*.cm* mk/ipc/*.o \
 	mk/mm/*.cm* mk/mm/*.o mk/perms/*.cm* mk/perms/*.o mk/proc/*.cm* \
-	mk/proc/*.o $(KERNEL) \
-	mk/shell_lexer.ml mk/shell_parser.ml shell_parser.mli \
+	mk/proc/*.o $(KERNEL) ../drivers/shell_lexer.ml ../drivers/shell_parser.ml \
+	../drivers/shell_parser.mli ../drivers/*.cm* ../drivers/*.o \
 	../servers/*.cm* ../servers/*.o ../userland/*.cm* ../userland/*.o \
 	.depend
 

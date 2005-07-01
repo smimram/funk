@@ -6,36 +6,17 @@
  *)
 
 
-(*
- * Page Table Entries
- * ------------------
- * Notice that Ocaml integers are only 31 bits long. 
- * An entry that tells about where a page points to, and its attributes:
- * 
- *  30..............11 10..9  8...7    6 5 4...3    2   1   0
- *  Page frame address Avail  Reserved D A Reserved U/S R/W Present
- *
- * Page frame address = Physical address of memory (either the physical address of the page, or the physical address of the page table)
- * Avail = Do what you want with this
- * Reserved = Reserved by Intel
- * D = Dirty
- * A = Accessed
- * U/S = User or supervisor level
- * R/W = Read or read and write
- *)
-
-
 (** An entry of the page table *)
 type page_table_entry =
-  { 
-    mutable addr     : string; (* Address of the physical page. *)
-    mutable avail    : string; (* Available string for whatever use. *)
-    mutable dirty    : bool;
-    mutable accessed : bool;
-    mutable us_level : bool;   (* User/Supervisor level. *)
-    mutable rw       : bool;
-    mutable present  : bool;
-  }
+{ 
+  mutable addr     : string; (* Address of the physical page. *)
+  mutable avail    : string; (* Available string for whatever use. *)
+  mutable dirty    : bool;
+  mutable accessed : bool;
+  mutable us_level : bool;   (* User/Supervisor level. *)
+  mutable rw       : bool;
+  mutable present  : bool;
+}
 
 exception Invalid_page_table_entry of page_table_entry
 
