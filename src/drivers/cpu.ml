@@ -269,12 +269,14 @@ let string_of_intel_signature family ext_family model stepping brand =
 		      | 4 -> " [D0]"
 		      | _ -> ""
 		  end
-		| 4 -> "Pentium 4 (Prescott)" ^ begin
+		| 4 -> "Pentium" ^ begin
 		    (* family F.0 model 4 *)
 		    match stepping with
-		      | 1 -> " 570J [E0]"
-		      | 3 -> " 630 EM64T [N0]" (* also 660 ? *)
-		      | _ -> ""
+		      | 1 -> " 4 (Prescott) 5xx [E0]"
+		      | 3 -> " 4 (Prescott) 6xx EM64T [N0]"
+		      | 4 -> " D (Smithfield) 8xx EM64T Dual Core [A0]"
+		      | 7 -> " D (Smithfield) 8xx EM64T Dual Core [B0]"
+		      | _ -> " 4"
 		    end
 		| 5 -> "Pentium 4 Xeon (Foster)"
 		| _ -> "Unknown CPU"
