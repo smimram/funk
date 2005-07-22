@@ -458,14 +458,10 @@ static char buf[1024];
 
 int printf(const char *fmt, ...)
 {
-  va_list args;
-  int i;
-  /* !! not reentrant !! */
-  va_start(args,fmt);
-  i = vsnprintf(buf,sizeof(buf),fmt,args);
-  va_end(args);
-  print_string(buf);
-  return i;
+#ifdef DEBUG
+  c_printf("printf(%s) called\n",fmt);
+#endif
+  return notImpl_int();
 }
 
 int c_printf(const char *fmt, ...)
@@ -482,12 +478,10 @@ int c_printf(const char *fmt, ...)
 
 int snprintf(char *buf, size_t size, const char *fmt, ...)
 {
-  va_list args;
-  int i;
-  va_start(args,fmt);
-  i = vsnprintf(buf,size,fmt,args);
-  va_end(args);
-  return i;
+#ifdef DEBUG
+  c_printf("snprintf(%p,%d,%s) called\n",buf,size,fmt);
+#endif
+  return notImpl_int();
 }
 
 int puts(const char *s)
@@ -502,17 +496,7 @@ int fprintf(FILE *stream, const char *format, ...)
 #ifdef DEBUG
   c_printf("fprintf(%p,%s) called\n",stream,format);
 #endif
-  if (stream != stdin && stream != stdout && stream != stderr)
-    return notImpl_int();
-  else {
-    va_list args;
-    int i;
-    va_start(args,format);
-    i = vsnprintf(buf,sizeof(buf),format,args);
-    va_end(args);
-    print_string(buf);
-    return i;
-  }
+  return notImpl_int();
 }
 
 int sprintf(char *str, const char *format, ...)
@@ -520,12 +504,7 @@ int sprintf(char *str, const char *format, ...)
 #ifdef DEBUG
   c_printf("sprintf(%p,%s) called\n",str,format);
 #endif
-  va_list args;
-  int i;
-  va_start(args,format);
-  i = vsnprintf(str,INT_MAX,format,args);
-  va_end(args);
-  return i;
+  return notImpl_int();
 }
 
 /* Files */
