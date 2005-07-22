@@ -64,8 +64,6 @@ let mlkernel_entry arg =
     Printf.printf "\n%!";
     Printf.printf "Funk 0.1.0 : caml est dans le jazz\n\n%!";
 
-    (* Satan *)
-    (*
     let context = {
       Funk.uid = 0;
       Funk.gid = 0;
@@ -74,7 +72,7 @@ let mlkernel_entry arg =
       Funk.umask = Vfs_defs.s_IWGRP lor Vfs_defs.s_IWOTH
     }
     in
-      Filecmds.start_dmesg_file_logging context; *)
+      Filecmds.start_dmesg_file_logging context;
       Shell.toplevel context arg
   with
     | e ->
