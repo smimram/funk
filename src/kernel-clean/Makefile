@@ -22,8 +22,8 @@ all:
 
 libocaml: $(OCAMLKERNEL)
 	@echo "Generating libocaml.a"
-	@cp $(CAMLLIB)/libasmrun.a $@
-	@ar r $@ $(OCAMLKERNEL)
+	@cp $(CAMLLIB)/libasmrun.a $(LIBOCAML)
+	@ar r $(LIBOCAML) $(OCAMLKERNEL)
 
 
 kernel: $(KERNEL)
