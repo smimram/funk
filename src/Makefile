@@ -22,5 +22,5 @@
 #                                                                             #
 ###############################################################################
 
-#all doc clean debug int:
-#	$(MAKE) -C kernel $@
+all doc clean debug int:
+	$(MAKE) -C kernel $@
