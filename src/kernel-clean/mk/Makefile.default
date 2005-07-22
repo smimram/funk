@@ -1,0 +1,57 @@
+
+ARCH    = $(shell arch)
+VERSION = $(shell cat ../../VERSION)
+KERNEL  = funk-$(ARCH)-$(VERSION)
+CAMLLIB = $(shell ocamlc -where)
+OCAMLPACKAGES	= "str extlib"
+
+# defs
+CC       = gcc
+CFLAGS  += -ansi -Wall -Os -fomit-frame-pointer
+INCDIRS  = -Iarch/i386/include
+OCAMLINCDIRS = -I ..
+OCAMLFINDPARAMS = -package $(OCAMLPACKAGES)
+OCAMLOPT = ocamlfind ocamlopt $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
+OCAMLLEX = ocamllex
+OCAMLYACC = ocamlyacc
+OCAMLDEP = ocamlfind ocamldep -native $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
+OCAMLDOC = ocamlfind ocamldoc $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
+LD       = ld
+LDFLAGS	 = 
+WORKING_DIR = $(shell pwd)
+
+ifeq ($(findstring debug, $(MAKECMDGOALS)),debug)
+	CPPFLAGS   += -DDEBUG
+	CFLAGS += -g
+endif
+
+.PHONY: doc clean debug depend
+
+BROTHER_DIRS = ../ipc ../mm ../proc ../perms
+OCAMLINCDIRS += $(foreach i,$(BROTHER_DIRS),-I $i)
+
+SRC_ML  = $(wildcard *.ml)
+SRC_MLI = $(wildcard *.mli)
+CMX     = $(SRC_ML:.ml=.cmx)
+CMI     = $(SRC_ML:.ml=.cmi)
+
+
+%.cmx: %.ml
+	@echo "generating $@..."
+	@ $(OCAMLOPT) -c -o $@ $<
+
+%.cmi: %.mli
+	@echo "generating $@..."
+	@ $(OCAMLOPT) -c -o $@ $<
+
+%.cmi: %.ml
+	@echo "generating $@..."
+	@ $(OCAMLOPT) -c -o $@ $<
+
+
+all: $(CMI) $(CMX)
+
+
+clean:
+	@echo "Cleaning $(WORKING_DIR)..."
+	@rm -rf *.cm* *.o
