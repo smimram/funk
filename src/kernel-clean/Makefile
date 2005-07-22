@@ -1,3 +1,4 @@
+.PHONY: all libcaml kernel mk run boot clean
 
 ARCH    = $(shell arch)
 VERSION = $(shell cat ../../VERSION)
@@ -12,15 +13,9 @@ OBJS_C = $(shell find run -name "*.c") $(shell find boot -name "*.c")
 OBJS_S = $(shell find boot -name "*.S")
 OBJS_O = $(OBJS_C:.c=.o) $(OBJS_S:.S=.o)
 
-all:
-	@make -C boot
-	@make -C run
-	@make -C mk
-	@make libocaml
-	@make kernel
+all: libocaml kernel
 
-
-libocaml: $(OCAMLKERNEL)
+libocaml: mk $(OCAMLKERNEL)
 	@echo "Generating libocaml.a"
 	@cp $(CAMLLIB)/libasmrun.a $(LIBOCAML)
 	@ar r $(LIBOCAML) $(OCAMLKERNEL)
@@ -29,14 +24,22 @@ libocaml: $(OCAMLKERNEL)
 kernel: $(KERNEL)
 	@echo $(OBJS_O)
 
-$(KERNEL): $(LIBOCAML) $(OBJS_O) $(LINK_SCRIPT)
+$(KERNEL): run boot $(LIBOCAML) $(OBJS_O) $(LINK_SCRIPT)
 	$(LD) $(LDFLAGS) -static -o $(KERNEL) -e multiboot_entry \
               $(OBJS_O) $(LIBOCAML) $(shell $(CC) -print-libgcc-file-name) \
               -T $(LINK_SCRIPT)
 
+mk:
+	@make -C mk
 
+run:
+	@make -C run
+
+boot:
+	@make -C boot
 
 clean:
 	@make -C mk clean
 	@make -C boot clean
 	@make -C run clean
+	# some stuff are missing here
