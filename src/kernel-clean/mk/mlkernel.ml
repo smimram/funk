@@ -64,7 +64,7 @@ let mlkernel_entry arg =
     Printf.printf "\n%!";
     Printf.printf "Funk 0.1.0 : caml est dans le jazz\n\n%!";
 
-    (* Satan *)
+    (* Disabled until Heimdall's fucking code works, one day... *)
     (*
     let context = {
       Funk.uid = 0;
@@ -73,9 +73,10 @@ let mlkernel_entry arg =
       Funk.wd_handle = Vfs.init "ramfs";
       Funk.umask = Vfs_defs.s_IWGRP lor Vfs_defs.s_IWOTH
     }
-    in ()
+    in
       Filecmds.start_dmesg_file_logging context;
       Shell.toplevel context arg *)
+    ()
   with
     | e ->
         Utils.kprintf "mlkernel" "Uncatched exception: %s\nI'm dying now...\n%!" (Printexc.to_string e);
