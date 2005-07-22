@@ -22,7 +22,6 @@ libocaml: mk $(OCAMLKERNEL)
 
 
 kernel: $(KERNEL)
-	@echo $(OBJS_O)
 
 $(KERNEL): run boot $(LIBOCAML) $(OBJS_O) $(LINK_SCRIPT)
 	$(LD) $(LDFLAGS) -static -o $(KERNEL) -e multiboot_entry \
@@ -42,4 +41,4 @@ clean:
 	@make -C mk clean
 	@make -C boot clean
 	@make -C run clean
-	# some stuff are missing here
+	@ rm -rf $(KERNEL) $(OCAMLKERNEL) $(LIBOCAML)
