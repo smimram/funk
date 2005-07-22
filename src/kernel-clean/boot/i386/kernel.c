@@ -32,7 +32,7 @@
 
 #include "multiboot.h"
 #include "libc-dummy.h"
-#include "threads.h"
+/*#include "threads.h"*/
 #include "asm-utils.h"
 #include "kernel.h"
 #include <caml/callback.h>
@@ -97,12 +97,10 @@ void kernel_entry(unsigned long magic,unsigned long addr)
   /* then call the caml startup function */
   caml_startup(argv);
   /* initialize threads */
-  thread_init();
+/*  thread_init();*/
   /* start the ml kernel... */
-  create_thread(caml_named_value("mlkernel_entry"), &mlkernel_arg);
+/*  create_thread(caml_named_value("mlkernel_entry"), &mlkernel_arg);*/
+  caml_callback(*caml_named_value("mlkernel_entry"), Val_int(mlkernel_arg));
+
   /* and stay idle */
-  while (1) {
-    sched_yield();
-    hlt();
-  }
 }

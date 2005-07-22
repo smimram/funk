@@ -8,6 +8,7 @@ OCAMLPACKAGES	= "str extlib"
 # defs
 CC       = gcc
 CFLAGS  += -ansi -Wall -Os -fomit-frame-pointer
+CPPFLAGS += -DCAML_NAME_SPACE $(INCDIRS) -I$(CAMLLIB)
 INCDIRS  = -Iarch/i386/include
 OCAMLINCDIRS = -I ..
 OCAMLFINDPARAMS = -package $(OCAMLPACKAGES)
@@ -32,8 +33,11 @@ OCAMLINCDIRS += $(foreach i,$(BROTHER_DIRS),-I $i)
 
 SRC_ML  = $(wildcard *.ml)
 SRC_MLI = $(wildcard *.mli)
+STUBS   = $(wildcard *.c)
 CMX     = $(SRC_ML:.ml=.cmx)
 CMI     = $(SRC_ML:.ml=.cmi)
+STUBS_O = $(STUBS:.c=.o)
+
 
 
 %.cmx: %.ml
@@ -48,8 +52,13 @@ CMI     = $(SRC_ML:.ml=.cmi)
 	@echo "generating $@..."
 	@ $(OCAMLOPT) -c -o $@ $<
 
+%.o: %.c
+	@echo "Generating $@..."
+	@ $(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 
-all: $(CMI) $(CMX)
+
+
+all: $(STUBS_O) $(CMI) $(CMX)
 
 
 clean:

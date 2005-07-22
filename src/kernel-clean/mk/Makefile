@@ -33,7 +33,7 @@ EXT_ML  = $(SRC_ML) $(foreach i,$(SUBDIRS),$(wildcard $i/*.ml))
 CMX     = $(SRC_ML:.ml=.cmx)
 CMI     = $(SRC_ML:.ml=.cmi)
 
-OCAMLKERNEL = ../ocamlmkkernel.o
+OCAMLKERNEL = ocamlmkkernel.o
 
 
 %.cmx: %.ml
@@ -63,12 +63,9 @@ $(OCAMLKERNEL): $(CMI) $(CMX)
 	@echo "Done with microkernel generation"
 
 
-
-
-
 clean:
 	@echo "Cleaning..."
-	@rm -rf *.cm*
+	@rm -rf *.cm* *.o $(OCAMLKERNEL)
 	@make -C ipc   clean
 	@make -C mm    clean
 	@make -C perms clean
