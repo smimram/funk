@@ -9,16 +9,18 @@ LINK_SCRIPT	= link.ld
 LD = ld
 
 OBJS_C = $(shell find run -name "*.c") $(shell find boot -name "*.c")
-OBJS_O = $(OBJS_C:.c=.o)
+OBJS_S = $(shell find boot -name "*.S")
+OBJS_O = $(OBJS_C:.c=.o) $(OBJS_S:.S=.o)
 
-all: $(LIBOCAML)
+all:
 	@make -C boot
 	@make -C run
 	@make -C mk
+	@make libocaml
 	@make kernel
 
 
-$(LIBOCAML): $(OCAMLKERNEL)
+libocaml: $(OCAMLKERNEL)
 	@echo "Generating libocaml.a"
 	@cp $(CAMLLIB)/libasmrun.a $@
 	@ar r $@ $(OCAMLKERNEL)

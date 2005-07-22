@@ -12,17 +12,22 @@ endif
 
 
 RUN_C = $(wildcard i386/*.c *.c)
+RUN_S = $(wildcard i386/*.S)
 RUN_O = $(RUN_C:.c=.o)
+RUN_SO = $(RUN_S:.S=.o)
 
-all: $(RUN_O)
+all: $(RUN_O) $(RUN_SO)
 	@echo "Done with boot/"
 
 %.o: %.c
 	@echo "Generating $@..."
 	@ $(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 
+%.o: %.S
+	@echo "Generating $@..."
+	@ $(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+
+
 clean:
-	@echo $(RUN_C)
 	@echo "Cleaning run"
-	@ rm -rf *.o
-	
+	@ rm -rf *.o i386/*.o
