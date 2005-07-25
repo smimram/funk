@@ -40,3 +40,6 @@ val string_of_subclass : int -> int -> string
 
 (** Get the name a full description of a PCI unit in lspci format. *)
 val string_of_unit : Pci.pci_unit -> string
+
+val numeric_string_of_unit : Pci.pci_unit -> string
+

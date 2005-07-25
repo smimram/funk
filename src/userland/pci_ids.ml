@@ -10258,3 +10258,7 @@ let string_of_unit u =
   (try
      string_of_device u.Pci.vendor u.Pci.device
    with Not_found -> "Unknown device")
+
+let numeric_string_of_unit u =
+   Printf.sprintf "0000:%02x:%02x.%01x %04x: %04x:%04x"
+     u.Pci.bus u.Pci.unt u.Pci.funct u.Pci.baseclass u.Pci.vendor u.Pci.device
