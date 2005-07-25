@@ -134,6 +134,9 @@ $(LIBOCAML): $(CMX) $(OCAMLWRAPPER) $(OCAMLKERNEL)
 %.ml: %.mll
 	$(OCAMLLEX) $<
 
+../userland/pci_ids.ml: ../userland/pci_ids.ml.in
+	cd ../userland ; ./gen_pci_ids.pl	
+
 clean:
 	rm -f run/*.o run/*.a run/*/*.o mk/*.cm* mk/*.o mk/ipc/*.cm* mk/ipc/*.o \
 	mk/mm/*.cm* mk/mm/*.o mk/perms/*.cm* mk/perms/*.o mk/proc/*.cm* \
