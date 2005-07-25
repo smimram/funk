@@ -456,6 +456,8 @@ int sscanf(const char *str, const char *format, ...)
 
 static char buf[1024];
 
+/* Note: these are *used* by the caml runtime for internal display. Exception printing for instance, so *don't* remove them */
+
 int printf(const char *fmt, ...)
 {
   va_list args;
