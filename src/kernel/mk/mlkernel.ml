@@ -39,31 +39,33 @@ let initialized = ref false
 (* ml kernel entry point *)
 let mlkernel_entry arg =
   try
-    Console.clear (Console.get_current_console ());
+    (*Console.clear (Console.get_current_console ());*)
     Printf.printf "Toplevel parameter is %d\n%!" arg;
-    Printf.printf "Current thread: %d\n%!" (KThread.id (KThread.self ()));
+    (*Printf.printf "Current thread: %d\n%!" (KThread.id (KThread.self ()));*)
     (* Don't rescan the PCI list since it would
      * forget all previously acquired devices. *)
     if not !initialized then
       (
-        (* Serial.echo_kprintf 0; *)
+        (* Serial.echo_kprintf 0; 
         Console.serial_console 0;
         Memory.init ();
         Cpu.check_model ();
         Irq.init ();
         Floppy.init ();
         Pci.scan ();
-        (* Ide.scan (); *)
+        Ide.scan ();
         Ne2k.init ();
 	Cirrusfb.init();
         Keyboard.init ();
         Mouse.init ();
-	Ramfs.init ();
+	Ramfs.init (); *)
         initialized := true
       );
     Printf.printf "\n%!";
     Printf.printf "Funk 0.1.0 : caml est dans le jazz\n\n%!";
 
+    (* Disabled until Heimdall's fucking code works, one day... *)
+    (*
     let context = {
       Funk.uid = 0;
       Funk.gid = 0;
@@ -73,10 +75,11 @@ let mlkernel_entry arg =
     }
     in
       Filecmds.start_dmesg_file_logging context;
-      Shell.toplevel context arg
+      Shell.toplevel context arg *)
+    ()
   with
     | e ->
-        Funk.kprintf "mlkernel" "Uncatched exception: %s\nI'm dying now...\n%!" (Printexc.to_string e);
+        Utils.kprintf "mlkernel" "Uncatched exception: %s\nI'm dying now...\n%!" (Printexc.to_string e);
         exit 0
 
 (* export the kernel entry function to C *)
