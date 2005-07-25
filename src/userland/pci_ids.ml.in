@@ -5,8 +5,8 @@ let re_vendor = Str.regexp "^\\([^ ]+\\)[ ]+\\(.*\\)$"
 let iter_ids f =
   pos := 0;
   let loop = ref true in
-# replace with this to read from the file
-# let loop = ref true and ids = Filecmds.cat_from_file "pci.ids" in
+(* replace with this to read from the file
+ let loop = ref true and ids = Filecmds.cat_from_file "pci.ids" in *)
     try
       while !loop
       do
