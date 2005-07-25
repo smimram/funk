@@ -28,9 +28,9 @@
 
 use strict;
 
-system("chmod +w pci_ids.ml");
+open IDS, "/usr/share/misc/pci.ids" or die "Cannot open pci.ids: $!\nCancelling regeneration of pci_ids.ml";
 
-open IDS, "/usr/share/misc/pci.ids" or die "Cannot open pci.ids: $!";
+system("chmod +w pci_ids.ml");
 open OUT, ">pci_ids.ml" or die "pci_ids.ml: $!";
 
 print OUT "(* THIS FILE WAS AUTOMATICALLY GENERATED, PLEASE DO NOT EDIT. *)\n\n";
