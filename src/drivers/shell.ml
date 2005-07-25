@@ -70,20 +70,23 @@ let () =
   Hashtbl.add cmds "interrupt" (fun ctx -> function i::_ -> Funk.make_interrupt (int_of_string i) | _ -> raise Wrong_arg_nb);
   Hashtbl.add cmds "irqkbd" (fun ctx _ -> irqkbd := not !irqkbd);
   Hashtbl.add cmds "lspci"
-    (fun ctx _ ->
-       List.iter
-         (fun u ->
-            (* Printf.printf
-             "PCI device: dev: %x, vend: %x, class: %x, sclass: %x, pi: %x\n%!"
-             u.Pci.device u.Pci.vendor u.Pci.baseclass u.Pci.subclass u.Pci.prog_if; *)
-            Printf.printf "%s\n%!" (Pci_ids.string_of_unit u)
-         ) (Pci.get_units ()));
-  Hashtbl.add cmds "lspci-n"
-    (fun ctx _ ->
-       List.iter
-         (fun u ->
-            Printf.printf "%s\n%!" (Pci_ids.numeric_string_of_unit u)
-         ) (Pci.get_units ()));
+    (fun ctx ->
+       function
+         | [] ->
+             List.iter
+               (fun u ->
+                  (* Printf.printf
+                   "PCI device: dev: %x, vend: %x, class: %x, sclass: %x, pi: %x\n%!"
+                   u.Pci.device u.Pci.vendor u.Pci.baseclass u.Pci.subclass u.Pci.prog_if; *)
+                  Printf.printf "%s\n%!" (Pci_ids.string_of_unit u)
+               ) (Pci.get_units ())
+         | ["-n"] ->
+             List.iter
+               (fun u ->
+                  Printf.printf "%s\n%!" (Pci_ids.numeric_string_of_unit u)
+               ) (Pci.get_units ())
+         | _ -> raise Wrong_arg_nb
+    );
   Hashtbl.add cmds "message" (fun ctx -> function msg::_ -> Funk.kprintf "test" "%s\n" msg | _ -> raise Wrong_arg_nb);
   Hashtbl.add cmds "net" (fun _  _ -> Ne2k.test ());
   Hashtbl.add cmds "reboot"
