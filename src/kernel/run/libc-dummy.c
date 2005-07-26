@@ -262,6 +262,8 @@ void free (void* ptr)
 /*#ifdef DEBUG*/
   c_printf ("calling free %p\n", ptr);
 /*#endif*/
+  if (!ptr)
+    return;
   /* find out if we should merge two empty spaces */
   for (cur = *(void**) (heap + HEAP_OFFSET); *(void**)(cur - 2*s) < ptr; cur = *(void**)(cur - 2*s))
     if (cur + *(int*) (cur - s) + s == ptr)
