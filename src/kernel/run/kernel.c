@@ -58,6 +58,7 @@ void kernel_entry(unsigned long magic,unsigned long addr)
   unsigned long mmap_size;
   unsigned long block_size = 1<<20; /* assume at least 1MB upper memory */
   static char * argv[]={ "ocaml", NULL };
+  value *val;
 
   /* check the multiboot-compliant magic number */
   if(magic!=MULTIBOOT_BOOTLOADER_MAGIC) return;
@@ -99,7 +100,14 @@ void kernel_entry(unsigned long magic,unsigned long addr)
   /* initialize threads */
   thread_init();
   /* start the ml kernel... */
-  create_thread(caml_named_value("mlkernel_entry"), &mlkernel_arg);
+  val = caml_named_value("mlkernel_entry");
+#ifdef DEBUG
+  if (!val) {
+    c_printf("aargh, no mlkernel_entry value !\n");
+    hang();
+  }
+#endif
+  create_thread(val, &mlkernel_arg);
   /* and stay idle */
   while (1) {
     sched_yield();
