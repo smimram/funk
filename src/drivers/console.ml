@@ -29,7 +29,7 @@
   *
   * @author Nicolas Guenot, Samuel Mimram, Samuel Thibault *)
 
-let kprintf s = Funk.kprintf "Console" s
+let kprintf s = Utils.kprintf "Console" s
 
 let serial_console = ref None
                   
@@ -167,12 +167,12 @@ let set_color x y fg bg =
   video.[2 * (y * len_x + x) + 1] <- char_of_color fg bg
 
 let write_vga reg value =
-  Funk.outb !port_reg reg;
-  Funk.outb !port_val value
+  Ports.outb !port_reg reg;
+  Ports.outb !port_val value
 
 let read_vga reg =
-  Funk.outb !port_reg reg;
-  Funk.inb !port_val
+  Ports.outb !port_reg reg;
+  Ports.inb !port_val
 
 (* TODO: store in csl *)
 let set_cursor_size csl s e =
@@ -205,8 +205,9 @@ let display csl =
 
 let clear csl =
   (match !serial_console with
-     | Some port -> Serial.send_string port "\027[2J\027[0;0H"
-     | None -> ());
+     (*| Some port -> Serial.send_string port "\027[2J\027[0;0H"*)
+     | None -> ()
+     |_     -> ());
   (* TODO: improve this, only add a clear page *)
   csl.buffer <- get_empty_buffer ();
   csl.scroll_lines <- 0;
@@ -266,10 +267,11 @@ let del_char csl =
 
 let put_char_c csl c fg bg =
   (match !serial_console with
-     | Some port ->
+     (*| Some port ->
          Serial.send_string port (ansi_of_color fg bg);
-         Serial.send_char port c
-     | None -> ());
+         Serial.send_char port c*)
+     | None -> ()
+     |_     -> ());
   if c = '\n' then
     newline csl
   else if c = '\r' then
@@ -337,7 +339,7 @@ let wait_for_input csl =
       with
 	| Ctrl_D -> loop := false;
         | Not_found ->
-            KThread.yield ()
+            (*KThread.yield*) ()
     done
 
 let input_line csl =
@@ -373,7 +375,8 @@ let () =
   Callback.register "funk_print_string"
     (fun s -> print_string (get_current_console ()) s)
 
-let on_key csl c s =
+(* We drop dependency of keyboard.ml for now : we just want to be able to print things to the screen *)
+(*let on_key csl c s =
   if c = Keyboard.Char 'd' && s.Keyboard.ks_ctrl then raise (Ctrl_D);
   match c with
     | Keyboard.Char c ->
@@ -393,8 +396,9 @@ let on_key csl c s =
           | _ -> kprintf "Unknown special key\n%!"
 
 let () =
-  Keyboard.on_key (fun c s -> on_key (get_current_console ()) c s)
+  Keyboard.on_key (fun c s -> on_key (get_current_console ()) c s)*)
 
-let serial_console port =
+(* We drop dependency of serial.ml for now *)
+(*let serial_console port =
   serial_console := Some port;
-  Serial.capture_keyboard port
+  Serial.capture_keyboard port*)

@@ -1,4 +1,4 @@
-let kprintf f = Funk.kprintf "KBD" f
+let kprintf f = Utils.kprintf "KBD" f
 
 type special_key =
   | F1
@@ -45,9 +45,9 @@ let keyboard_read_port = 0x60
 exception No_key
 
 let get_scancode () =
-  if Funk.inb_p keyboard_status_port land 0x01 <> 0x01 then
+  if Ports.inb_p keyboard_status_port land 0x01 <> 0x01 then
     raise No_key;
-  Funk.inb_p keyboard_read_port
+  Ports.inb_p keyboard_read_port
 
 let receive_scancode c =
   let return c =
