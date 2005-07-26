@@ -6,6 +6,7 @@ CAMLLIB = $(shell ocamlc -where)
 KERNEL  = funk-$(ARCH)-$(VERSION)
 LIBOCAML    = run/libocaml.a
 OCAMLKERNEL = mk/ocamlmkkernel.o
+FUNKDRIVERS = ../drivers/funkdrivers.o
 LINK_SCRIPT	= link.ld
 LD = ld
 
@@ -15,11 +16,14 @@ OBJS_O = $(OBJS_C:.c=.o) $(OBJS_S:.S=.o)
 
 all: libocaml kernel
 
-libocaml: mk $(OCAMLKERNEL)
+libocaml: mk funkdrivers $(OCAMLKERNEL) $(FUNKDRIVERS)
 	@echo "Generating libocaml.a"
 	@cp $(CAMLLIB)/libasmrun.a $(LIBOCAML)
-	@ar r $(LIBOCAML) $(OCAMLKERNEL)
+	@ar r $(LIBOCAML) $(FUNKDRIVERS) $(OCAMLKERNEL)
 
+funkdrivers:
+	@echo "Generating funkdrivers.o"
+	@ make -C ../drivers
 
 kernel: $(KERNEL)
 
@@ -41,4 +45,5 @@ clean:
 	@make -C mk clean
 	@make -C boot clean
 	@make -C run clean
-	@ rm -rf $(KERNEL) $(OCAMLKERNEL) $(LIBOCAML)
+	@make -C ../drivers clean
+	@ rm -rf $(KERNEL) $(FUNKDRIVERS) $(OCAMLKERNEL) $(LIBOCAML)
