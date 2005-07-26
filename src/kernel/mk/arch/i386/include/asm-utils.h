@@ -30,7 +30,7 @@ static __inline__ void hang(void)
 	while(1) hlt();
 }
 
-extern int interrupt_disabled;
+int interrupt_disabled;
 
 static __inline__ void cli(void)
 {

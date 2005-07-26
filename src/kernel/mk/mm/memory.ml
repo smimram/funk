@@ -1,4 +1,4 @@
-let kprintf f = Funk.kprintf "MEM" f
+let kprintf f = Utils.kprintf "MEM" f
 
 external size : unit -> int = "caml_funk_mem_size"
 
