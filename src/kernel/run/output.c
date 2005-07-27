@@ -34,6 +34,7 @@
 
 #include "output.h"
 #include "libc-dummy.h"
+#include "asm-utils.h"
 
 /* screen-related definitions */
 #define VIDEO_COLS   80
@@ -99,11 +100,25 @@ void c_print_string(const char *s)
 /* character printing function */
 void print_char(unsigned char c)
 {
-  caml_callback(*caml_named_value("funk_put_char"), Val_int(c));
+  value *val = caml_named_value("funk_put_char");
+#ifdef DEBUG
+  if (!val) {
+    c_printf("funk_put_char not found !\n");
+    hang();
+  }
+#endif
+  caml_callback(*val, Val_int(c));
 }
 
 /* string printing function */
 void print_string(const char *s)
 {
-  caml_callback(*caml_named_value("funk_print_string"), caml_copy_string(s));
+  value *val = caml_named_value("funk_print_string");
+#ifdef DEBUG
+  if (!val) {
+    c_printf("funk_put_string not found !\n");
+    hang();
+  }
+#endif
+  caml_callback(*val, caml_copy_string(s));
 }
