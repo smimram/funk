@@ -424,7 +424,8 @@ int sigaltstack(const stack_t *ss, stack_t *oss)
 #ifdef DEBUG
   c_printf("sigaltstack(%p,%p) called\n",ss,oss);
 #endif
-  memcpy(oss,&sigstack,sizeof(*oss));
+  if (oss)
+    memcpy(oss,&sigstack,sizeof(*oss));
   memcpy(&sigstack,ss,sizeof(stack_t));
   return 0;
 }
