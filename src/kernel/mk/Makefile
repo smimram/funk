@@ -25,13 +25,17 @@ endif
 
 .PHONY: doc clean debug depend
 
-SUBDIRS = ipc mm proc perms
+SUBDIRS = ipc mm perms proc
+
+OCAMLINCDIRS += $(foreach i,$(SUBDIRS),-I $i) -I .
 
 SRC_ML  = $(wildcard *.ml)
 SRC_MLI = $(wildcard *.mli)
-EXT_ML  = $(SRC_ML) $(foreach i,$(SUBDIRS),$(wildcard $i/*.ml))
+EXT_ML  = utils.ml misc.ml $(foreach i,$(SUBDIRS),$(wildcard $i/*.ml)) mlkernel.ml
 CMX     = $(SRC_ML:.ml=.cmx)
 CMI     = $(SRC_ML:.ml=.cmi)
+EXT_CMX = $(EXT_ML:.ml=.cmx)
+EXT_CMI = $(EXT_ML:.ml=.cmi)
 
 OCAMLKERNEL = ocamlmkkernel.o
 
