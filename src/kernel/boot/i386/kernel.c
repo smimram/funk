@@ -57,6 +57,7 @@ void kernel_entry(unsigned long magic,unsigned long addr)
   unsigned long mmap_size;
   unsigned long block_size = 1<<20; /* assume at least 1MB upper memory */
   static char * argv[]={ "ocaml", NULL };
+  value *val;
 
   /* check the multiboot-compliant magic number */
   if(magic!=MULTIBOOT_BOOTLOADER_MAGIC) return;
@@ -107,5 +108,11 @@ void kernel_entry(unsigned long magic,unsigned long addr)
     sched_yield();
     hlt();
   }*/
-  caml_callback(*caml_named_value("mlkernel_entry"), Val_int(mlkernel_arg));
+  if (!(val = caml_named_value("mlkernel_entry"))) {
+    c_printf("mlkernel not found !\n");
+    hang();
+  }
+  caml_callback(*val, Val_int(mlkernel_arg));
+  c_printf("mlkernel returned!\n");
+  hang();
 }
