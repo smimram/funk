@@ -11,15 +11,17 @@ LINK_SCRIPT	= link.ld
 LD = ld
 
 OBJS_C = $(shell find run -name "*.c") $(shell find boot -name "*.c")
+EXT_C  = $(shell find mk -name "*.c")
 OBJS_S = $(shell find boot -name "*.S")
 OBJS_O = $(OBJS_C:.c=.o) $(OBJS_S:.S=.o)
+EXT_O  = $(EXT_C:.c=.o)
 
 all: libocaml kernel
 
 libocaml: mk funkdrivers $(OCAMLKERNEL) $(FUNKDRIVERS)
 	@echo "Generating libocaml.a"
 	@cp $(CAMLLIB)/libasmrun.a $(LIBOCAML)
-	@ar r $(LIBOCAML) $(FUNKDRIVERS) $(OCAMLKERNEL)
+	@ar r $(LIBOCAML) $(FUNKDRIVERS) $(OCAMLKERNEL) $(EXT_O)
 
 funkdrivers:
 	@echo "Generating funkdrivers.o"
