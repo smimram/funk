@@ -40,12 +40,12 @@ drivers:
 
 $(OCAMLKERNEL): $(EXT_CMI) $(EXT_CMX) drivers $(KERN_CMX)
 	@echo "Making subdirectories cmx..."
-	make -C ipc
-	make -C mm
-	make -C perms
-	make -C proc
+	@make -C ipc
+	@make -C mm
+	@make -C perms
+	@make -C proc
 	@echo "Generating $@..."
-	 $(OCAMLOPT) -linkpkg $(EXT_CMXA) $(TOT_CMX) -output-obj -o $@
+	@$(OCAMLOPT) -linkpkg $(EXT_CMXA) $(TOT_CMX) -output-obj -o $@
 	@echo "Done with microkernel generation"
 
 

@@ -1,6 +1,3 @@
-CAMLLIB = $(shell ocamlc -where)
-
-CC       = gcc
 INCDIRS  = -Ii386/include -I../boot/i386/include -I../mk/arch/i386/include
 CFLAGS  += -ansi -Wall -Os -fomit-frame-pointer
 CPPFLAGS += -DCAML_NAME_SPACE $(INCDIRS) -I$(CAMLLIB)
@@ -17,11 +14,8 @@ RUN_O = $(RUN_C:.c=.o)
 all: $(RUN_O)
 	@echo "Done with run/"
 
-%.o: %.c
-	@echo "Generating $@..."
-	 $(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
-
 clean:
 	@echo "Cleaning run"
-	@ rm -rf *.o
-	
+	@rm -rf *.o
+
+-include ../../Makefile.common

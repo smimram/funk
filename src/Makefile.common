@@ -27,3 +27,7 @@ MAKEFLAGS += --no-print-directory
 %.o: %.c
 	@echo "[CC]  $<"
 	@$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+
+%.o: %.S
+	@echo "[CC]  $<"
+	@$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<

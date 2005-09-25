@@ -1,24 +1,13 @@
-
-ARCH    = $(shell arch)
 VERSION = $(shell cat ../../VERSION)
 KERNEL  = funk-$(ARCH)-$(VERSION)
-CAMLLIB = $(shell ocamlc -where)
-OCAMLPACKAGES	= "str extlib"
+OCAMLPACKAGES = "str extlib"
 
 # defs
-CC       = gcc
 INCDIRS  = -I../arch/i386/include -I../../boot/i386/include -I../../run/i386/include
 CFLAGS  += -ansi -Wall -Os -fomit-frame-pointer
 CPPFLAGS += -DCAML_NAME_SPACE $(INCDIRS) -I$(CAMLLIB)
 OCAMLINCDIRS = -I ..
-OCAMLFINDPARAMS = -package $(OCAMLPACKAGES)
-OCAMLOPT = ocamlfind ocamlopt $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
-OCAMLLEX = ocamllex
-OCAMLYACC = ocamlyacc
-OCAMLDEP = ocamlfind ocamldep -native $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
-OCAMLDOC = ocamlfind ocamldoc $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
-LD       = ld
-LDFLAGS	 = 
+LDFLAGS = 
 WORKING_DIR = $(shell pwd)
 
 ifeq ($(findstring debug, $(MAKECMDGOALS)),debug)
@@ -38,29 +27,10 @@ CMX     = $(SRC_ML:.ml=.cmx)
 CMI     = $(SRC_ML:.ml=.cmi)
 STUBS_O = $(STUBS:.c=.o)
 
-
-
-%.cmx: %.ml
-	@echo "generating $@..."
-	@ $(OCAMLOPT) -c -o $@ $<
-
-%.cmi: %.mli
-	@echo "generating $@..."
-	@ $(OCAMLOPT) -c -o $@ $<
-
-%.cmi: %.ml
-	@echo "generating $@..."
-	@ $(OCAMLOPT) -c -o $@ $<
-
-%.o: %.c
-	@echo "Generating $@..."
-	@ $(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
-
-
-
 all: $(STUBS_O) $(CMI) $(CMX)
-
 
 clean:
 	@echo "Cleaning $(WORKING_DIR)..."
 	@rm -rf *.cm* *.o
+
+-include ../../../Makefile.common
