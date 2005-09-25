@@ -112,6 +112,7 @@ void kernel_entry(unsigned long magic,unsigned long addr)
     c_printf("mlkernel not found !\n");
     hang();
   }
+  c_printf("mlkernel starting\n");
   caml_callback(*val, Val_int(mlkernel_arg));
   c_printf("mlkernel returned!\n");
   hang();

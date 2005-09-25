@@ -36,21 +36,22 @@ CMX     = $(SRC_ML:.ml=.cmx)
 CMI     = $(SRC_ML:.ml=.cmi)
 EXT_CMX = $(EXT_ML:.ml=.cmx)
 EXT_CMI = $(EXT_ML:.ml=.cmi)
+DRV_CMX = ../../drivers/ports.cmx ../../drivers/console.cmx
 
 OCAMLKERNEL = ocamlmkkernel.o
 
 
 %.cmx: %.ml
 	@echo "Generating $@..."
-	@ $(OCAMLOPT) -c -o $@ $<
+	 $(OCAMLOPT) -c -o $@ $<
 
 %.cmi: %.mli
 	@echo "Generating $@..."
-	@ $(OCAMLOPT) -c -o $@ $<
+	 $(OCAMLOPT) -c -o $@ $<
 
 %.cmi: %.ml
 	@echo "Generating $@..."
-	@ $(OCAMLOPT) -c -o $@ $<
+	 $(OCAMLOPT) -c -o $@ $<
 
 
 
@@ -58,12 +59,13 @@ all: $(OCAMLKERNEL)
 
 $(OCAMLKERNEL): $(CMI) $(CMX)
 	@echo "Making subdirectories cmx..."
-	@make -C ipc
-	@make -C mm
-	@make -C perms
-	@make -C proc
+	make -C ipc
+	make -C mm
+	make -C perms
+	make -C proc
+	make -C ../../drivers
 	@echo "Generating $@..."
-	@ $(OCAMLOPT) -linkpkg $(EXT_CMXA) $(EXT_CMX) -output-obj -o $@
+	 $(OCAMLOPT) -linkpkg $(EXT_CMXA) $(EXT_CMX) $(DRV_CMX) -output-obj -o $@
 	@echo "Done with microkernel generation"
 
 

@@ -19,7 +19,7 @@ all: $(RUN_O)
 
 %.o: %.c
 	@echo "Generating $@..."
-	@ $(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+	 $(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 clean:
 	@echo "Cleaning run"

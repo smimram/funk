@@ -21,11 +21,11 @@ all: $(RUN_O) $(RUN_SO)
 
 %.o: %.c
 	@echo "Generating $@..."
-	@ $(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+	 $(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 %.o: %.S
 	@echo "Generating $@..."
-	@ $(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+	 $(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 
 clean:

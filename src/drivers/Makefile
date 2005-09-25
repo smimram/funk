@@ -32,43 +32,43 @@ endif
 #SRC_ML  = $(wildcard *.ml)
 SRC_ML  = ports.ml console.ml
 SRC_MLI = $(SRC_ML:.ml=.mli)
-STUBS   = 
+STUBS   = ports_stubs.c
 CMX     = $(SRC_ML:.ml=.cmx)
 CMI     = $(SRC_MLI:.mli=.cmi)
 STUBS_O = $(STUBS:.c=.o)
 
 FUNKDRIVERS = funkdrivers.o
 
-
 %.cmx: %.ml
 	@echo "Generating $@..."
-	@ $(OCAMLOPT) -c -o $@ $<
+	 $(OCAMLOPT) -c -o $@ $<
 
 %.cmi: %.mli
 	@echo "Generating $@..."
-	@ $(OCAMLOPT) -c -o $@ $<
+	 $(OCAMLOPT) -c -o $@ $<
 
 %.cmi: %.ml
 	@echo "Generating $@..."
-	@ $(OCAMLOPT) -c -o $@ $<
+	 $(OCAMLOPT) -c -o $@ $<
 
 %.o: %.c
 	@echo "Generating $@..."
-	@ $(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+	 $(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 
 
-all: debug $(FUNKDRIVERS)
+#all: debug $(FUNKDRIVERS)
+all: $(CMI) $(CMX) $(STUBS_O)
 
 debug:
 	@echo $(CMI)
 	@echo $(CMX)
 	@echo $(STUBS_O)
 
-$(FUNKDRIVERS): $(STUBS_O) $(CMI) $(CMX)
-	@echo "Generating $@..."
-	@ $(OCAMLOPT) -linkpkg $(EXT_CMXA) $(EXT_CMX) -output-obj -o $@
-	@echo "Done with drivers"
+#$(FUNKDRIVERS): $(STUBS_O) $(CMI) $(CMX)
+#	@echo "Generating $@..."
+#	 $(OCAMLOPT) -linkpkg $(CMX) -output-obj -o $@
+#	@echo "Done with drivers"
 
 
 clean:
