@@ -39,10 +39,10 @@ let initialized = ref false
 (* ml kernel entry point *)
 let mlkernel_entry arg =
   try
-    let con = Console.make () in
-    Console.clear con;
-    Console.print_string con "Funk est dans le jazz\n%!";
-     Printf.printf "Toplevel parameter is %d\n%!" arg; 
+    let con = Console.get_current_console () in
+      Console.clear con;
+      Console.print_string con "Funk est dans le jazz\n%!";
+      Printf.printf "Toplevel parameter is %d\n%!" arg; 
     (*Printf.printf "Current thread: %d\n%!" (KThread.id (KThread.self ()));*)
     (* Don't rescan the PCI list since it would
      * forget all previously acquired devices. *)
