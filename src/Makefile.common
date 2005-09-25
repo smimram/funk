@@ -1,0 +1,29 @@
+ARCH    = $(shell arch)
+CAMLLIB = $(shell ocamlc -where)
+
+CC = gcc
+OCAMLFINDPARAMS = -package $(OCAMLPACKAGES)
+OCAMLOPT = ocamlfind ocamlopt $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
+OCAMLLEX = ocamllex
+OCAMLYACC = ocamlyacc
+CAMLDEP = ocamlfind ocamldep -native $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
+OOCAMLDOC = ocamlfind ocamldoc $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
+LD = ld
+
+MAKEFLAGS += --no-print-directory
+
+%.cmx: %.ml
+	@echo "[ML]  $<"
+	@$(OCAMLOPT) $(OCAMLFLAGS_$@) -c -o $@ $<
+
+%.cmi: %.mli
+	@echo "[MLI] $<"
+	@$(OCAMLOPT) -c -o $@ $<
+
+%.cmi: %.ml
+	@echo [MLI] $<"
+	@$(OCAMLOPT) -c -o $@ $<
+
+%.o: %.c
+	@echo "[CC]  $<"
+	@$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<

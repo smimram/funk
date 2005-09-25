@@ -1,22 +1,12 @@
-ARCH    = $(shell arch)
 VERSION = $(shell cat ../../VERSION)
 KERNEL  = funk-$(ARCH)-$(VERSION)
-CAMLLIB = $(shell ocamlc -where)
-OCAMLPACKAGES	= "str extlib"
+OCAMLPACKAGES = "str extlib"
 
 # defs
-CC       = gcc
 CFLAGS  += -ansi -Wall -Os -fomit-frame-pointer
 INCDIRS  = -Iarch/i386/include
-OCAMLFINDPARAMS = -package $(OCAMLPACKAGES)
 OCAMLINCDIRS = 
-OCAMLOPT = ocamlfind ocamlopt $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
-OCAMLLEX = ocamllex
-OCAMLYACC = ocamlyacc
-OCAMLDEP = ocamlfind ocamldep -native $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
-OCAMLDOC = ocamlfind ocamldoc $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
-LD       = ld
-LDFLAGS	 = 
+LDFLAGS = 
 
 ifeq ($(findstring debug, $(MAKECMDGOALS)),debug)
 	CPPFLAGS   += -DDEBUG
@@ -43,25 +33,10 @@ TOT_CMX = $(EXT_CMX) $(DRV_CMX) $(KERN_CMX)
 
 OCAMLKERNEL = ocamlmkkernel.o
 
-
-%.cmx: %.ml
-	@echo "Generating $@..."
-	 $(OCAMLOPT) -c -o $@ $<
-
-%.cmi: %.mli
-	@echo "Generating $@..."
-	 $(OCAMLOPT) -c -o $@ $<
-
-%.cmi: %.ml
-	@echo "Generating $@..."
-	 $(OCAMLOPT) -c -o $@ $<
-
-
-
 all: $(OCAMLKERNEL)
 
 drivers:
-	make -C ../../drivers
+	@make -C ../../drivers
 
 $(OCAMLKERNEL): $(EXT_CMI) $(EXT_CMX) drivers $(KERN_CMX)
 	@echo "Making subdirectories cmx..."
@@ -81,3 +56,5 @@ clean:
 	@make -C mm    clean
 	@make -C perms clean
 	@make -C proc  clean
+
+-include ../../Makefile.common

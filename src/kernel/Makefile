@@ -1,14 +1,11 @@
 .PHONY: all libcaml kernel mk run boot clean
 
-ARCH    = $(shell arch)
 VERSION = $(shell cat ../../VERSION)
-CAMLLIB = $(shell ocamlc -where)
 KERNEL  = funk-$(ARCH)-$(VERSION)
 LIBOCAML    = run/libocaml.a
 OCAMLKERNEL = mk/ocamlmkkernel.o
 FUNKDRIVERS = ../drivers/funkdrivers.o
-LINK_SCRIPT	= link.ld
-LD = ld
+LINK_SCRIPT = link.ld
 
 OBJS_C = $(shell find run -name "*.c") $(shell find boot -name "*.c")
 OBJS_S = $(shell find boot -name "*.S")
@@ -51,3 +48,5 @@ clean:
 	@make -C run clean
 	@make -C ../drivers clean
 	@ rm -rf $(KERNEL) $(FUNKDRIVERS) $(OCAMLKERNEL) $(LIBOCAML)
+
+-include ../Makefile.common
