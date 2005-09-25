@@ -25,7 +25,7 @@ static __inline__ void hlt(void)
 	__asm__ __volatile__ ("hlt");
 }
 
-static __inline__ void hang(void)
+static __inline__ __attribute__((__noreturn__)) void hang(void)
 {
 	while(1) hlt();
 }

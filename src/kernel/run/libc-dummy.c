@@ -63,8 +63,6 @@ static void __attribute__((__noreturn__)) notImpl_fp(void)
   c_printf("FP operation\n");
 #endif
   hang();
-  /* For GCC 4.0 to be happy. */
-  while (1);
 }
 
 long __sysconf(int name)
@@ -107,8 +105,6 @@ void exit(int status)
   c_printf("exit called(%i)\n",status);
 #endif
   hang();
-  /* For GCC 4.0 to be happy. */
-  while (1);
 }
 
 #define pid_t int
