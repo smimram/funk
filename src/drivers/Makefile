@@ -41,7 +41,7 @@ FUNKDRIVERS = funkdrivers.o
 
 %.cmx: %.ml
 	@echo "Generating $@..."
-	 $(OCAMLOPT) -c -o $@ $<
+	 $(OCAMLOPT) $(OCAMLFLAGS_$@) -c -o $@ $<
 
 %.cmi: %.mli
 	@echo "Generating $@..."
