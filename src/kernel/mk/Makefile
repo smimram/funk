@@ -27,16 +27,19 @@ endif
 
 SUBDIRS = ipc mm perms proc
 
-OCAMLINCDIRS += $(foreach i,$(SUBDIRS),-I $i) -I .
+OCAMLINCDIRS += $(foreach i,$(SUBDIRS),-I $i) -I . -I ../../drivers
 
 SRC_ML  = $(wildcard *.ml)
 SRC_MLI = $(wildcard *.mli)
-EXT_ML  = utils.ml misc.ml $(foreach i,$(SUBDIRS),$(wildcard $i/*.ml)) mlkernel.ml
+EXT_ML  = utils.ml misc.ml $(foreach i,$(SUBDIRS),$(wildcard $i/*.ml))
+KERN_ML = mlkernel.ml
+KERN_CMX = $(KERN_ML:.ml=.cmx)
 CMX     = $(SRC_ML:.ml=.cmx)
 CMI     = $(SRC_ML:.ml=.cmi)
 EXT_CMX = $(EXT_ML:.ml=.cmx)
 EXT_CMI = $(EXT_ML:.ml=.cmi)
 DRV_CMX = ../../drivers/ports.cmx ../../drivers/console.cmx
+TOT_CMX = $(EXT_CMX) $(DRV_CMX) $(KERN_CMX)
 
 OCAMLKERNEL = ocamlmkkernel.o
 
@@ -57,15 +60,17 @@ OCAMLKERNEL = ocamlmkkernel.o
 
 all: $(OCAMLKERNEL)
 
-$(OCAMLKERNEL): $(CMI) $(CMX)
+drivers:
+	make -C ../../drivers
+
+$(OCAMLKERNEL): $(EXT_CMI) $(EXT_CMX) drivers $(KERN_CMX)
 	@echo "Making subdirectories cmx..."
 	make -C ipc
 	make -C mm
 	make -C perms
 	make -C proc
-	make -C ../../drivers
 	@echo "Generating $@..."
-	 $(OCAMLOPT) -linkpkg $(EXT_CMXA) $(EXT_CMX) $(DRV_CMX) -output-obj -o $@
+	 $(OCAMLOPT) -linkpkg $(EXT_CMXA) $(TOT_CMX) -output-obj -o $@
 	@echo "Done with microkernel generation"
 
 
