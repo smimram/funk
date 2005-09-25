@@ -41,9 +41,8 @@ let mlkernel_entry arg =
   try
     let con = Console.make () in
     Console.clear con;
-    Console.display con;
     Console.print_string con "Funk est dans le jazz\n%!";
-    Printf.printf "Toplevel parameter is %d\n%!" arg;
+     Printf.printf "Toplevel parameter is %d\n%!" arg; 
     (*Printf.printf "Current thread: %d\n%!" (KThread.id (KThread.self ()));*)
     (* Don't rescan the PCI list since it would
      * forget all previously acquired devices. *)
@@ -63,8 +62,8 @@ let mlkernel_entry arg =
 	Ramfs.init (); *)
         initialized := true
       );
-    Printf.printf "\n%!";
-    Printf.printf "Funk 0.1.0 : caml est dans le jazz\n\n%!";
+     Printf.printf "\n%!"; 
+     Printf.printf "Funk 0.1.0 : caml est dans le jazz\n\n%!"; 
 
     (* Disabled until Heimdall's fucking code works, one day... *)
     (*

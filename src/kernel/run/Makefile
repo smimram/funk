@@ -12,7 +12,6 @@ RUN_C = $(wildcard *.c)
 RUN_O = $(RUN_C:.c=.o)
 
 all: $(RUN_O)
-	@echo "Done with run/"
 
 clean:
 	@echo "Cleaning run"

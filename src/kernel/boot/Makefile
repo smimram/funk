@@ -17,7 +17,7 @@ all: $(RUN_O) $(RUN_SO)
 #	@echo "Done with boot/"
 
 clean:
-	@echo "Cleaning run"
+	@echo "Cleaning boot"
 	@rm -rf *.o i386/*.o
 
 -include ../../Makefile.common

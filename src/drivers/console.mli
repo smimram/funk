@@ -87,4 +87,4 @@ val print_string_c : t -> string -> color -> color -> unit
 val input_line : t -> string
 
 (* No more serial port for now *)
-(*val serial_console : int -> unit*)
+(* val serial_console : int -> unit *)

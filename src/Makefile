@@ -22,5 +22,7 @@
 #                                                                             #
 ###############################################################################
 
+MAKEFLAGS += --no-print-directory
+
 all doc clean debug int:
-	$(MAKE) -C kernel $@
+	@$(MAKE) -C kernel $@

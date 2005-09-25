@@ -39,18 +39,16 @@ drivers:
 	@make -C ../../drivers
 
 $(OCAMLKERNEL): $(EXT_CMI) $(EXT_CMX) drivers $(KERN_CMX)
-	@echo "Making subdirectories cmx..."
 	@make -C ipc
 	@make -C mm
 	@make -C perms
 	@make -C proc
-	@echo "Generating $@..."
+	@echo "[LD]    $@"
 	@$(OCAMLOPT) -linkpkg $(EXT_CMXA) $(TOT_CMX) -output-obj -o $@
-	@echo "Done with microkernel generation"
 
 
 clean:
-	@echo "Cleaning..."
+	@echo "Cleaning mk"
 	@rm -rf *.cm* *.o $(OCAMLKERNEL)
 	@make -C ipc   clean
 	@make -C mm    clean

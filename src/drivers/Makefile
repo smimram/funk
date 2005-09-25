@@ -46,7 +46,7 @@ debug:
 
 
 clean:
-	@echo "Cleaning drivers..."
+	@echo "Cleaning drivers"
 	@rm -rf *.cm* *.o $(FUNKDRIVERS) .depend
 
 -include ../Makefile.common

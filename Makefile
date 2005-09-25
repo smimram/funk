@@ -24,6 +24,8 @@
 
 VERSION = $(shell cat VERSION)
 
+MAKEFLAGS += --no-print-directory
+
 DISTFILES = AUTHORS ChangeLog COPYING Makefile README README.Devel TODO VERSION \
 		$(wildcard bootimg/*.img*) bootimg/Makefile bootimg/bochsrc* bootimg/gdbinit \
 		src/Makefile \
@@ -40,24 +42,24 @@ DISTFILES = AUTHORS ChangeLog COPYING Makefile README README.Devel TODO VERSION 
 .PHONY: doc dist ChangeLog
 
 all doc clean debug:
-	$(MAKE) -C src $@
+	@$(MAKE) -C src $@
 
 int:
-	$(MAKE) -C src int
-	$(MAKE) qemu
+	@$(MAKE) -C src int
+	@$(MAKE) qemu
 
 qemu qemugdb qemu-x86_64 bochs bochsgdb qemulogs qemuconsole qemunet livecd: all
-	$(MAKE) -C bootimg $@
+	@$(MAKE) -C bootimg $@
 
 dist: $(DISTFILES) doc
-	mkdir funk-$(VERSION)
-	cp  -r --no-dereference --parents $(DISTFILES) funk-$(VERSION)
-	tar jcvf funk-$(VERSION).tar.bz2 funk-$(VERSION)
-	rm -rf funk-$(VERSION)
+	@mkdir funk-$(VERSION)
+	@cp  -r --no-dereference --parents $(DISTFILES) funk-$(VERSION)
+	@tar jcvf funk-$(VERSION).tar.bz2 funk-$(VERSION)
+	@rm -rf funk-$(VERSION)
 
 ChangeLog:
-	svn log > ChangeLog
+	@svn log > ChangeLog
 
 dist-regression: dist
-	cp funk-$(VERSION).tar.bz2 /tmp
-	cd /tmp; tar jxvf funk-$(VERSION).tar.bz2; cd funk-$(VERSION); make
+	@cp funk-$(VERSION).tar.bz2 /tmp
+	@cd /tmp; tar jxvf funk-$(VERSION).tar.bz2; cd funk-$(VERSION); make
