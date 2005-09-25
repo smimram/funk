@@ -55,7 +55,7 @@ static int y_pos = 10;
   CAMLreturn0;
 } */
 
-static void newline()
+/*static void newline()
 {
   x_pos = 0;
   if(y_pos<VIDEO_LINES-1)
@@ -64,7 +64,7 @@ static void newline()
     memmove(VIDEO_MEM,VIDEO_MEM+2*VIDEO_COLS,(VIDEO_LINES-1)*VIDEO_COLS*2);
     memset(VIDEO_MEM+(VIDEO_LINES-1)*VIDEO_COLS*2,0,VIDEO_COLS*2);
   }
-}
+}*/
 
 void c_print_char(unsigned char c)
 {

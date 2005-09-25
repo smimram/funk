@@ -37,7 +37,7 @@ KERN_CMX = $(KERN_ML:.ml=.cmx)
 CMX     = $(SRC_ML:.ml=.cmx)
 CMI     = $(SRC_ML:.ml=.cmi)
 EXT_CMX = $(EXT_ML:.ml=.cmx)
-EXT_CMI = $(EXT_ML:.ml=.cmi)
+EXT_CMI = $(EXT_ML:.ml=.cmi) $(KERN_ML:.ml=.cmi)
 DRV_CMX = ../../drivers/ports.cmx ../../drivers/console.cmx
 TOT_CMX = $(EXT_CMX) $(DRV_CMX) $(KERN_CMX)
 

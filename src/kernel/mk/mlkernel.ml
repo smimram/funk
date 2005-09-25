@@ -42,7 +42,7 @@ let mlkernel_entry arg =
     let con = Console.make () in
     Console.clear con;
     Console.display con;
-    Console.print_string (Console.get_current_console()) "Funk est dans le jazz\n%!";
+    Console.print_string con "Funk est dans le jazz\n%!";
     Printf.printf "Toplevel parameter is %d\n%!" arg;
     (*Printf.printf "Current thread: %d\n%!" (KThread.id (KThread.self ()));*)
     (* Don't rescan the PCI list since it would
