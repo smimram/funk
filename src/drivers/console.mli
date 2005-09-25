@@ -56,7 +56,7 @@ type color =
   | Light_magenta
   | Yellow
   | White
-  
+
 (** Create a new console. *)
 val make : unit -> t
 
@@ -66,7 +66,7 @@ val get_current_console : unit -> t
 (** Check if a console is the currently displayed console. You cannot use [=]
   * since we use functionnal values in type [t]. *)
 val is_current_console : t -> bool
-                                    
+
 (** Display a console (this will change the current console. *)
 val display : t -> unit
 
@@ -78,7 +78,7 @@ val put_char : t -> char -> unit
 
 (** A char was received from the keyboard. *)
 val receive_char : t -> char -> unit
-                              
+
 (** Print a string in a console. *)
 val print_string : t -> string -> unit
 
