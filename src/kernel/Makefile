@@ -42,6 +42,6 @@ clean:
 	@make -C boot clean
 	@make -C run clean
 	@make -C ../drivers clean
-	@ rm -rf $(KERNEL) $(FUNKDRIVERS) $(OCAMLKERNEL) $(LIBOCAML)
+	@ rm -rf $(KERNEL) $(OCAMLKERNEL) $(LIBOCAML)
 
 -include ../Makefile.common
