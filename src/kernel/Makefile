@@ -1,6 +1,6 @@
 .PHONY: all libcaml kernel mk run boot clean
 
-VERSION = $(shell cat ../../VERSION)
+VERSION = $(shell while ! cat VERSION 2>/dev/null ; do [ `pwd` == '/' ] && echo "noVERSION" && break ; cd .. ; done)
 KERNEL  = funk-$(ARCH)-$(VERSION)
 LIBOCAML    = run/libocaml.a
 OCAMLKERNEL = mk/ocamlmkkernel.o
