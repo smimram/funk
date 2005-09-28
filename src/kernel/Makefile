@@ -16,8 +16,8 @@ all: libocaml kernel
 
 libocaml: mk $(OCAMLKERNEL)
 	@echo "[AR]    $(LIBOCAML)"
-	@echo "[AR]    $(OCAMLKERNEL)"
 	@cp $(CAMLLIB)/libasmrun.a $(LIBOCAML)
+	@echo "[AR]    $(OCAMLKERNEL)"
 	@ar r $(LIBOCAML) $(OCAMLKERNEL)
 
 kernel: $(KERNEL)
