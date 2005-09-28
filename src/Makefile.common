@@ -2,6 +2,7 @@ ARCH    = $(shell arch)
 CAMLLIB = $(shell ocamlc -where)
 
 CC = gcc
+AS = gcc
 OCAMLFINDPARAMS = -package $(OCAMLPACKAGES)
 OCAMLOPT = ocamlfind ocamlopt $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
 OCAMLLEX = ocamllex
@@ -29,5 +30,5 @@ MAKEFLAGS += --no-print-directory --silent
 	@$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 %.o: %.S
-	@echo "[CC]    $@"
-	@$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+	@echo "[AS]    $@"
+	@$(AS) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
