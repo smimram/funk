@@ -14,21 +14,21 @@ LD = ld
 MAKEFLAGS += --no-print-directory --silent
 
 %.cmx: %.ml
-	@echo "[ML]    $@"
+	@echo "[ML]    $(shell basename $@)"
 	@$(OCAMLOPT) $(OCAMLFLAGS_$@) -c -o $@ $<
 
 %.cmi: %.mli
-	@echo "[MLI]   $@"
+	@echo "[MLI]   $(shell basename $@)"
 	@$(OCAMLOPT) -c -o $@ $<
 
 %.cmi: %.ml
-	@echo [MLI]   $@"
+	@echo "[MLI]   $(shell basename $@)"
 	@$(OCAMLOPT) -c -o $@ $<
 
 %.o: %.c
-	@echo "[CC]    $@"
+	@echo "[CC]    $(shell basename $@)"
 	@$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 %.o: %.S
-	@echo "[AS]    $@"
+	@echo "[AS]    $(shell basename $@)"
 	@$(AS) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<

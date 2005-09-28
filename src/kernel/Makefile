@@ -15,9 +15,9 @@ EXT_O  = $(EXT_C:.c=.o) ../drivers/ports_stubs.o
 all: libocaml kernel
 
 libocaml: mk $(OCAMLKERNEL)
-	@echo "[AR]    $(LIBOCAML)"
+	@echo "[AR]    $(shell basename $(LIBOCAML))"
 	@cp $(CAMLLIB)/libasmrun.a $(LIBOCAML)
-	@echo "[AR]    $(OCAMLKERNEL)"
+	@echo "[AR]    $(shell basename $(OCAMLKERNEL))"
 	@ar r $(LIBOCAML) $(OCAMLKERNEL)
 
 kernel: $(KERNEL)
