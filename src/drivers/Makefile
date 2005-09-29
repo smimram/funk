@@ -1,5 +1,3 @@
-VERSION = $(shell cat ../../VERSION)
-KERNEL  = funk-$(ARCH)-$(VERSION)
 OCAMLPACKAGES = "str extlib"
 
 KERNEL_DIR = ../kernel
