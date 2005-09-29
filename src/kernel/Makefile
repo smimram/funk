@@ -25,21 +25,21 @@ kernel: $(KERNEL)
 
 $(KERNEL): run boot $(LIBOCAML) $(OBJS_O) $(LINK_SCRIPT)
 	@echo "[LD]    $(RELDIR)$(KERNEL)"
-	@$(LD) $(LDFLAGS) -static -o $(KERNEL) -e multiboot_entry \
+	$(LD) $(LDFLAGS) -static -o $(KERNEL) -e multiboot_entry \
               $(OBJS_O) $(EXT_O) $(LIBOCAML) $(shell $(CC) -print-libgcc-file-name) \
               -T $(LINK_SCRIPT)
 
 mk:
-	@make RELDIR=$(RELDIR)mk/ -C mk
+	make RELDIR=$(RELDIR)mk/ -C mk
 
 run:
-	@make RELDIR=$(RELDIR)run/ -C run
+	make RELDIR=$(RELDIR)run/ -C run
 
 boot:
-	@make RELDIR=$(RELDIR)boot/ -C boot
+	make RELDIR=$(RELDIR)boot/ -C boot
 
 clean:
-	@for subdir in $(SUBDIRS) ; do make RELDIR=$(RELDIR)$$subdir/ -C $$subdir clean ; done
-	@ rm -rf $(KERNEL) $(OCAMLKERNEL) $(LIBOCAML)
+	for subdir in $(SUBDIRS) ; do make RELDIR=$(RELDIR)$$subdir/ -C $$subdir clean ; done
+	rm -rf $(KERNEL) $(OCAMLKERNEL) $(LIBOCAML)
 
 -include ../Makefile.common

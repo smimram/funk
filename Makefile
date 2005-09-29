@@ -24,7 +24,9 @@
 
 VERSION = $(shell cat VERSION)
 
-MAKEFLAGS += --no-print-directory
+ifneq ($(V),1)
+	MAKEFLAGS += --no-print-directory --silent
+endif
 
 DISTFILES = AUTHORS ChangeLog COPYING Makefile README README.Devel TODO VERSION \
 		$(wildcard bootimg/*.img*) bootimg/Makefile bootimg/bochsrc* bootimg/gdbinit \

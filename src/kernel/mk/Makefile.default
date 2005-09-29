@@ -28,6 +28,6 @@ all: $(STUBS_O) $(CMI) $(CMX)
 
 clean:
 	@echo "Cleaning $(RELDIR)"
-	@rm -rf *.cm* *.o
+	rm -rf *.cm* *.o
 
 -include ../../../Makefile.common

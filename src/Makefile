@@ -22,7 +22,9 @@
 #                                                                             #
 ###############################################################################
 
-MAKEFLAGS += --no-print-directory
+ifneq ($(V),1)
+	MAKEFLAGS += --no-print-directory --silent
+endif
 
 all doc clean debug int:
-	@$(MAKE) RELDIR=$(RELDIR)kernel/ -C kernel $@
+	$(MAKE) RELDIR=$(RELDIR)kernel/ -C kernel $@

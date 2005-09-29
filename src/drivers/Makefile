@@ -45,6 +45,6 @@ debug:
 
 clean:
 	@echo "Cleaning $(RELDIR)"
-	@rm -rf *.cm* *.o $(FUNKDRIVERS) .depend
+	rm -rf *.cm* *.o $(FUNKDRIVERS) .depend
 
 -include ../Makefile.common

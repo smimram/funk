@@ -11,24 +11,26 @@ CAMLDEP = ocamlfind ocamldep -native $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
 OOCAMLDOC = ocamlfind ocamldoc $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
 LD = ld
 
-MAKEFLAGS += --no-print-directory --silent
+ifneq ($(V),1)
+	MAKEFLAGS += --no-print-directory --silent
+endif
 
 %.cmx: %.ml
 	@echo "[ML]    $(RELDIR)$@"
-	@$(OCAMLOPT) $(OCAMLFLAGS_$@) -c -o $@ $<
+	$(OCAMLOPT) $(OCAMLFLAGS_$@) -c -o $@ $<
 
 %.cmi: %.mli
 	@echo "[MLI]   $(RELDIR)$@"
-	@$(OCAMLOPT) -c -o $@ $<
+	$(OCAMLOPT) -c -o $@ $<
 
 %.cmi: %.ml
 	@echo "[MLI]   $(RELDIR)$@"
-	@$(OCAMLOPT) -c -o $@ $<
+	$(OCAMLOPT) -c -o $@ $<
 
 %.o: %.c
 	@echo "[CC]    $(RELDIR)$@"
-	@$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 %.o: %.S
 	@echo "[AS]    $(RELDIR)$@"
-	@$(AS) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+	$(AS) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
