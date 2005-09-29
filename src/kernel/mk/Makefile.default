@@ -6,8 +6,6 @@ CFLAGS  += -ansi -Wall -Os -fomit-frame-pointer
 CPPFLAGS += -DCAML_NAME_SPACE $(INCDIRS) -I$(CAMLLIB)
 OCAMLINCDIRS = -I ..
 LDFLAGS = 
-WORKING_DIR = $(shell pwd)
-SMALL_WORKING_DIR = $(shell perl -e 'my $$s = `pwd`; if($$s =~ m/\/(.*)\/(.*)/) { print $$2;}')
 
 ifeq ($(findstring debug, $(MAKECMDGOALS)),debug)
 	CPPFLAGS   += -DDEBUG
@@ -29,7 +27,7 @@ STUBS_O = $(STUBS:.c=.o)
 all: $(STUBS_O) $(CMI) $(CMX)
 
 clean:
-	@echo "Cleaning $(SMALL_WORKING_DIR)"
+	@echo "Cleaning $(RELDIR)"
 	@rm -rf *.cm* *.o
 
 -include ../../../Makefile.common

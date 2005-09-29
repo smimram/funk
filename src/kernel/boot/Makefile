@@ -17,7 +17,7 @@ all: $(RUN_O) $(RUN_SO)
 #	@echo "Done with boot/"
 
 clean:
-	@echo "Cleaning boot"
+	@echo "Cleaning $(RELDIR)"
 	@rm -rf *.o i386/*.o
 
 -include ../../Makefile.common

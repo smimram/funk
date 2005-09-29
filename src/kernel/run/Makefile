@@ -14,7 +14,7 @@ RUN_O = $(RUN_C:.c=.o)
 all: $(RUN_O)
 
 clean:
-	@echo "Cleaning run"
+	@echo "Cleaning $(RELDIR)"
 	@rm -rf *.o
 
 -include ../../Makefile.common

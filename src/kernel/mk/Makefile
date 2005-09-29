@@ -42,7 +42,7 @@ $(OCAMLKERNEL): $(EXT_CMI) $(EXT_CMX) drivers $(KERN_CMX)
 	@$(OCAMLOPT) -linkpkg $(EXT_CMXA) $(TOT_CMX) -output-obj -o $@
 
 clean:
-	@echo "Cleaning mk"
+	@echo "Cleaning $(RELDIR)"
 	@rm -rf *.cm* *.o $(OCAMLKERNEL)
 	@for subdir in $(SUBDIRS) ; do make RELDIR=$(RELDIR)$$subdir/ -C $$subdir clean ; done
 	@make RELDIR=$(RELDIR)../../drivers/ -C ../../drivers clean
