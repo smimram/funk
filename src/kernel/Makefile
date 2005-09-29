@@ -39,8 +39,7 @@ boot:
 	@make -C boot
 
 clean:
-	@for subdir in $(SUBDIRS) ; do make -C $$subdir ; done
-	@make -C ../drivers clean
+	@for subdir in $(SUBDIRS) ; do make -C $$subdir clean ; done
 	@ rm -rf $(KERNEL) $(OCAMLKERNEL) $(LIBOCAML)
 
 -include ../Makefile.common

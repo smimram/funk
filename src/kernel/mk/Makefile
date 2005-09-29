@@ -11,7 +11,7 @@ ifeq ($(findstring debug, $(MAKECMDGOALS)),debug)
 	CFLAGS += -g
 endif
 
-.PHONY: doc clean debug depend
+.PHONY: doc clean debug depend drivers
 
 SUBDIRS = ipc mm perms proc
 
@@ -41,10 +41,10 @@ $(OCAMLKERNEL): $(EXT_CMI) $(EXT_CMX) drivers $(KERN_CMX)
 	@echo "[LD]    $@"
 	@$(OCAMLOPT) -linkpkg $(EXT_CMXA) $(TOT_CMX) -output-obj -o $@
 
-
 clean:
 	@echo "Cleaning mk"
 	@rm -rf *.cm* *.o $(OCAMLKERNEL)
 	@for subdir in $(SUBDIRS) ; do make -C $$subdir clean ; done
+	@make -C ../../drivers clean
 
 -include ../../Makefile.common
