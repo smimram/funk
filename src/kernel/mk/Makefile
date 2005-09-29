@@ -11,7 +11,7 @@ ifeq ($(findstring debug, $(MAKECMDGOALS)),debug)
 	CFLAGS += -g
 endif
 
-.PHONY: doc clean debug depend drivers
+.PHONY: doc clean debug depend
 
 SUBDIRS = ipc mm perms proc
 
@@ -33,11 +33,9 @@ OCAMLKERNEL = ocamlmkkernel.o
 
 all: $(OCAMLKERNEL)
 
-drivers:
-	make RELDIR=$(RELDIR)../../drivers/ -C ../../drivers
-
-$(OCAMLKERNEL): $(EXT_CMI) $(EXT_CMX) $(KERN_CMX) drivers
+$(OCAMLKERNEL): $(EXT_CMI) $(EXT_CMX) $(KERN_CMX)
 	for subdir in $(SUBDIRS) ; do make RELDIR=$(RELDIR)$$subdir/ -C $$subdir ; done
+	make RELDIR=$(RELDIR)../../drivers/ -C ../../drivers
 	@echo "[LD]    $(RELDIR)$@"
 	$(OCAMLOPT) -linkpkg $(EXT_CMXA) $(TOT_CMX) -output-obj -o $@
 
