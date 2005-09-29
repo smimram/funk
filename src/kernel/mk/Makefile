@@ -37,10 +37,7 @@ drivers:
 	@make -C ../../drivers
 
 $(OCAMLKERNEL): $(EXT_CMI) $(EXT_CMX) drivers $(KERN_CMX)
-	@make -C ipc
-	@make -C mm
-	@make -C perms
-	@make -C proc
+	@for subdir in $(SUBDIRS) ; do make -C $$subdir ; done
 	@echo "[LD]    $@"
 	@$(OCAMLOPT) -linkpkg $(EXT_CMXA) $(TOT_CMX) -output-obj -o $@
 
@@ -48,9 +45,6 @@ $(OCAMLKERNEL): $(EXT_CMI) $(EXT_CMX) drivers $(KERN_CMX)
 clean:
 	@echo "Cleaning mk"
 	@rm -rf *.cm* *.o $(OCAMLKERNEL)
-	@make -C ipc   clean
-	@make -C mm    clean
-	@make -C perms clean
-	@make -C proc  clean
+	@for subdir in $(SUBDIRS) ; do make -C $$subdir clean ; done
 
 -include ../../Makefile.common

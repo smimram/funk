@@ -11,6 +11,7 @@ OBJS_S = $(shell find boot -name "*.S")
 OBJS_O = $(OBJS_C:.c=.o) $(OBJS_S:.S=.o)
 EXT_C  = $(shell find mk -name "*.c")
 EXT_O  = $(EXT_C:.c=.o) ../drivers/ports_stubs.o
+SUBDIRS = mk boot run
 
 all: libocaml kernel
 
@@ -38,9 +39,7 @@ boot:
 	@make -C boot
 
 clean:
-	@make -C mk clean
-	@make -C boot clean
-	@make -C run clean
+	@for subdir in $(SUBDIRS) ; do make -C $$subdir ; done
 	@make -C ../drivers clean
 	@ rm -rf $(KERNEL) $(OCAMLKERNEL) $(LIBOCAML)
 
