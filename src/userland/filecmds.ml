@@ -364,6 +364,7 @@ let statfs ctx path =
 
 (* Initialize the hacky kprintf *)
 
+(*
 let start_dmesg_file_logging ctx =
   Funk.kprintf "LOG" "Now logging messages to dmesg file\n";
   (* open as root for now, until we have a real auth *)
@@ -371,4 +372,4 @@ let start_dmesg_file_logging ctx =
     [Vfs_defs.O_WRONLY;Vfs_defs.O_APPEND;Vfs_defs.O_CREAT;Vfs_defs.O_TRUNC]
     (Some 0o644)
   in Funk.set_fkprintf (fun s -> ignore (File.write dmesg_file (String.length s) s 0))
-
+*)

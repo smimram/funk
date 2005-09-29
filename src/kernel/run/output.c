@@ -97,6 +97,7 @@ void c_print_string(const char *s)
   c_print_char (' ');
 }
 
+#if 0
 /* character printing function */
 void print_char(unsigned char c)
 {
@@ -109,6 +110,7 @@ void print_char(unsigned char c)
 #endif
   caml_callback(*val, Val_int(c));
 }
+#endif
 
 /* string printing function */
 void print_string(const char *s)

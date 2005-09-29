@@ -309,10 +309,6 @@ let put_char csl c =
   let _, fg, bg = null_char in
     put_char_c csl c fg bg
 
-let () =
-  Callback.register "funk_put_char"
-    (fun c -> put_char (get_current_console ()) c)
-
 let receive_char csl c =
   if c = '\b' then
     (
@@ -355,10 +351,6 @@ let input_char csl =
     csl.received <- String.sub csl.received 1 ((String.length csl.received) - 1);
     ans
 
-let () =
-  Callback.register "funk_getch"
-    (fun () -> input_char (get_current_console ()))
-
 let print_string csl s =
   for i = 0 to (String.length s) - 1
   do
@@ -370,10 +362,6 @@ let print_string_c csl s fg bg =
   do
     put_char_c csl s.[i] fg bg
   done
-
-let () =
-  Callback.register "funk_print_string"
-    (fun s -> print_string (get_current_console ()) s)
 
 (* We drop dependency of keyboard.ml for now : we just want to be able to print things to the screen *)
 (*let on_key csl c s =
@@ -402,3 +390,6 @@ let () =
 (*let serial_console port =
   serial_console := Some port;
   Serial.capture_keyboard port*)
+
+let () =
+  Utils.set_fkprintf (fun s -> ignore (print_string (get_current_console ()) s))

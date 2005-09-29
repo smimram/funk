@@ -27,7 +27,7 @@ CMI     = $(SRC_ML:.ml=.cmi)
 EXT_CMX = $(EXT_ML:.ml=.cmx)
 EXT_CMI = $(EXT_ML:.ml=.cmi) $(KERN_ML:.ml=.cmi)
 DRV_CMX = ../../drivers/ports.cmx ../../drivers/console.cmx
-TOT_CMX = $(EXT_CMX) $(DRV_CMX) $(KERN_CMX)
+TOT_CMX = $(EXT_CMX) $(KERN_CMX) $(DRV_CMX)
 
 OCAMLKERNEL = ocamlmkkernel.o
 
@@ -36,7 +36,7 @@ all: $(OCAMLKERNEL)
 drivers:
 	make RELDIR=$(RELDIR)../../drivers/ -C ../../drivers
 
-$(OCAMLKERNEL): $(EXT_CMI) $(EXT_CMX) drivers $(KERN_CMX)
+$(OCAMLKERNEL): $(EXT_CMI) $(EXT_CMX) $(KERN_CMX) drivers
 	for subdir in $(SUBDIRS) ; do make RELDIR=$(RELDIR)$$subdir/ -C $$subdir ; done
 	@echo "[LD]    $(RELDIR)$@"
 	$(OCAMLOPT) -linkpkg $(EXT_CMXA) $(TOT_CMX) -output-obj -o $@

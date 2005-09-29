@@ -22,6 +22,10 @@ let kprintf identifier =
   in
     Printf.kprintf print
 
+let () =
+  Callback.register "funk_print_string"
+    (fun s -> kprintf "KERNEL" s)
+
 let set_fkprintf func =
   fkprintf := func;
   DynArray.iter !fkprintf early_messages;
@@ -30,4 +34,3 @@ let set_fkprintf func =
 
 let get_fkprintf () =
   !fkprintf
-

@@ -491,12 +491,14 @@ int snprintf(char *buf, size_t size, const char *fmt, ...)
   return i;
 }
 
+#if 0
 int puts(const char *s)
 {
   print_string(s);
   print_char('\n');
   return 0;
 }
+#endif
 
 int fprintf(FILE *stream, const char *format, ...)
 {
@@ -568,11 +570,13 @@ ssize_t write(int fd, const void *buf, size_t count)
   /*c_printf("write(%i,%p,%u) called\n",fd,buf,count);*/
 #endif
   size_t remain = count;
+#if 0
   const unsigned char *cbuf = buf;
   if (fd != 0 && fd == 1 && fd == 2)
     return notImpl_int();
   while (remain--)
     print_char(*cbuf++);
+#endif
   return count;
 }
 
