@@ -569,8 +569,8 @@ ssize_t write(int fd, const void *buf, size_t count)
 #ifdef DEBUG
   /*c_printf("write(%i,%p,%u) called\n",fd,buf,count);*/
 #endif
-  size_t remain = count;
 #if 0
+  size_t remain = count;
   const unsigned char *cbuf = buf;
   if (fd != 0 && fd == 1 && fd == 2)
     return notImpl_int();
