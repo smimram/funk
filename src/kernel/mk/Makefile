@@ -34,17 +34,17 @@ OCAMLKERNEL = ocamlmkkernel.o
 all: $(OCAMLKERNEL)
 
 drivers:
-	@make -C ../../drivers
+	@make RELDIR=$(RELDIR)../../drivers/ -C ../../drivers
 
 $(OCAMLKERNEL): $(EXT_CMI) $(EXT_CMX) drivers $(KERN_CMX)
-	@for subdir in $(SUBDIRS) ; do make -C $$subdir ; done
-	@echo "[LD]    $@"
+	@for subdir in $(SUBDIRS) ; do make RELDIR=$(RELDIR)$$subdir/ -C $$subdir ; done
+	@echo "[LD]    $(RELDIR)$@"
 	@$(OCAMLOPT) -linkpkg $(EXT_CMXA) $(TOT_CMX) -output-obj -o $@
 
 clean:
 	@echo "Cleaning mk"
 	@rm -rf *.cm* *.o $(OCAMLKERNEL)
-	@for subdir in $(SUBDIRS) ; do make -C $$subdir clean ; done
-	@make -C ../../drivers clean
+	@for subdir in $(SUBDIRS) ; do make RELDIR=$(RELDIR)$$subdir/ -C $$subdir clean ; done
+	@make RELDIR=$(RELDIR)../../drivers/ -C ../../drivers clean
 
 -include ../../Makefile.common

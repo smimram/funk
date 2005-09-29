@@ -16,30 +16,30 @@ SUBDIRS = mk boot run
 all: libocaml kernel
 
 libocaml: mk $(OCAMLKERNEL)
-	@echo "[AR]    $(shell basename $(LIBOCAML))"
+	@echo "[AR]    $(RELDIR)$(LIBOCAML)"
 	@cp $(CAMLLIB)/libasmrun.a $(LIBOCAML)
-	@echo "[AR]    $(shell basename $(OCAMLKERNEL))"
+	@echo "[AR]    $(RELDIR)$(OCAMLKERNEL)"
 	@ar r $(LIBOCAML) $(OCAMLKERNEL)
 
 kernel: $(KERNEL)
 
 $(KERNEL): run boot $(LIBOCAML) $(OBJS_O) $(LINK_SCRIPT)
-	@echo "[LD]    $(KERNEL)"
+	@echo "[LD]    $(RELDIR)$(KERNEL)"
 	@$(LD) $(LDFLAGS) -static -o $(KERNEL) -e multiboot_entry \
               $(OBJS_O) $(EXT_O) $(LIBOCAML) $(shell $(CC) -print-libgcc-file-name) \
               -T $(LINK_SCRIPT)
 
 mk:
-	@make -C mk
+	@make RELDIR=$(RELDIR)mk/ -C mk
 
 run:
-	@make -C run
+	@make RELDIR=$(RELDIR)run/ -C run
 
 boot:
-	@make -C boot
+	@make RELDIR=$(RELDIR)boot/ -C boot
 
 clean:
-	@for subdir in $(SUBDIRS) ; do make -C $$subdir clean ; done
+	@for subdir in $(SUBDIRS) ; do make RELDIR=$(RELDIR)$$subdir/ -C $$subdir clean ; done
 	@ rm -rf $(KERNEL) $(OCAMLKERNEL) $(LIBOCAML)
 
 -include ../Makefile.common

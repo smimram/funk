@@ -42,10 +42,10 @@ DISTFILES = AUTHORS ChangeLog COPYING Makefile README README.Devel TODO VERSION 
 .PHONY: doc dist ChangeLog
 
 all doc clean debug:
-	@$(MAKE) -C src $@
+	@$(MAKE) RELDIR=$(RELDIR)src/ -C src $@
 
 int:
-	@$(MAKE) -C src int
+	@$(MAKE) RELDIR=$(RELDIR)src/ -C src int
 	@$(MAKE) qemu
 
 qemu qemugdb qemu-x86_64 bochs bochsgdb qemulogs qemuconsole qemunet livecd: all
