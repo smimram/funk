@@ -34,13 +34,12 @@
  * kernel.c source file.
  *)
 
-let dying_msg = "Uncatched exception: %s\nI'm dying now...\n%!"
-
 (* ml kernel entry point *)
 let mlkernel_entry arg =
   try Utils.kprintf "KERNEL" "Funk est dans le jazz\n";
-  with e -> let _ = Utils.kprintf "mlkernel" dying_msg (Printexc.to_string e)
-            in exit 0
+  with e ->
+    let _ = Utils.kprintf "mlkernel" "Uncatched exception: %s\nI'm dying now...\n%!" (Printexc.to_string e)
+    in exit 0
 
 (* export the kernel entry function to C *)
 let _ = Callback.register "mlkernel_entry" mlkernel_entry
