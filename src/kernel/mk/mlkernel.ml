@@ -34,51 +34,14 @@
  * kernel.c source file.
  *)
 
-let initialized = ref false
+let dying_msg = "Uncatched exception: %s\nI'm dying now...\n%!"
 
 (* ml kernel entry point *)
 let mlkernel_entry arg =
-  try
-    Utils.kprintf "KERNEL" "Funk est dans le jazz\n";
-    (*Printf.printf "Current thread: %d\n%!" (KThread.id (KThread.self ()));*)
-    (* Don't rescan the PCI list since it would
-     * forget all previously acquired devices. *)
-    if not !initialized then
-      (
-        (* Serial.echo_kprintf 0; *)
-        (*Memory.init ();
-        Cpu.check_model ();
-        Irq.init ();
-        Floppy.init ();
-        Pci.scan ();
-        Ide.scan ();
-        Ne2k.init ();
-	Cirrusfb.init();
-        Keyboard.init ();
-        Mouse.init ();
-	Ramfs.init (); *)
-        initialized := true
-      );
-     Printf.printf "\n%!"; 
-     Printf.printf "Funk 0.1.0 : caml est dans le jazz\n\n%!"; 
-
-    (* Disabled until Heimdall's fucking code works, one day... *)
-    (*
-    let context = {
-      Funk.uid = 0;
-      Funk.gid = 0;
-      Funk.wd = "/";
-      Funk.wd_handle = Vfs.init "ramfs";
-      Funk.umask = Vfs_defs.s_IWGRP lor Vfs_defs.s_IWOTH
-    }
-    in
-      Filecmds.start_dmesg_file_logging context;
-      Shell.toplevel context arg *)
-    ()
-  with
-    | e ->
-        Utils.kprintf "mlkernel" "Uncatched exception: %s\nI'm dying now...\n%!" (Printexc.to_string e);
-        exit 0
+  try Utils.kprintf "KERNEL" "Funk est dans le jazz\n";
+  with e -> let _ = Utils.kprintf "mlkernel" dying_msg (Printexc.to_string e)
+            in exit 0
 
 (* export the kernel entry function to C *)
 let _ = Callback.register "mlkernel_entry" mlkernel_entry
+
