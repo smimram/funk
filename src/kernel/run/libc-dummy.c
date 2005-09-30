@@ -576,8 +576,21 @@ ssize_t write(int fd, const void *buf, size_t count)
     return notImpl_int();
   while (remain--)
     print_char(*cbuf++);
-#endif
   return count;
+#else
+  /* dirty write implementation based on print_string */
+  size_t remain = count;
+  const unsigned char *cbuf = buf;
+  char s[2];
+  if (fd != 0 && fd == 1 && fd == 2)
+    return notImpl_int();
+  s[1] = '\0';
+  while (remain--) {
+    s[0] = *cbuf++;
+    print_string(s);
+  }
+  return count;
+#endif
 }
 
 int fcntl(int fd, int cmd)
