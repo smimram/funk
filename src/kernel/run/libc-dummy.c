@@ -578,6 +578,7 @@ ssize_t write(int fd, const void *buf, size_t count)
     print_char(*cbuf++);
   return count;
 #else
+#if 0
   /* dirty write implementation based on print_string */
   size_t remain = count;
   const unsigned char *cbuf = buf;
@@ -589,6 +590,7 @@ ssize_t write(int fd, const void *buf, size_t count)
     s[0] = *cbuf++;
     print_string(s);
   }
+#endif
   return count;
 #endif
 }
