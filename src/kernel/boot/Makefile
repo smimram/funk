@@ -1,12 +1,6 @@
-INCDIRS  = -I../run/i386/include -Ii386/include -I../mk/arch/i386/include
+INCDIRS  = -I../run/$(ARCH)/include -I$(ARCH)/include -I../mk/arch/$(ARCH)/include
 CFLAGS  += -ansi -Wall -Os -fomit-frame-pointer
-CPPFLAGS += -DCAML_NAME_SPACE $(INCDIRS) -I$(CAMLLIB)
-
-ifeq ($(findstring debug, $(MAKECMDGOALS)),debug)
-	CPPFLAGS   += -DDEBUG
-	CFLAGS += -g
-endif
-
+CPPFLAGS += -DCAML_NAME_SPACE -I$(CAMLLIB)
 
 RUN_C = $(wildcard i386/*.c *.c)
 RUN_S = $(wildcard i386/*.S)
@@ -18,6 +12,6 @@ all: $(RUN_O) $(RUN_SO)
 
 clean:
 	@echo "Cleaning $(RELDIR)"
-	rm -rf *.o i386/*.o
+	rm -rf *.o $(ARCH)/*.o
 
 -include ../../Makefile.common

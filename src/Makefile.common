@@ -12,9 +12,12 @@ OOCAMLDOC = ocamlfind ocamldoc $(OCAMLFINDPARAMS) $(OCAMLINCDIRS)
 LD = ld
 
 ifeq ($(findstring debug, $(MAKECMDGOALS)),debug)
-	CPPFLAGS   += -DDEBUG
+	CPPFLAGS += -DDEBUG
 	CFLAGS += -g
 endif
+
+CPPFLAGS += $(INCDIRS)
+CFLAGS += $(INCDIRS)
 
 ifneq ($(V),1)
 	MAKEFLAGS += --no-print-directory --silent

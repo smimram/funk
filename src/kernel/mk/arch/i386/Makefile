@@ -7,7 +7,7 @@ O = $(C:.c=.o)
 all: $(O)
 
 clean:
-	@echo "Cleaning arch/i386"
+	@echo "Cleaning arch/$(ARCH)"
 	rm -rf *.o
 
 -include ../../../../Makefile.common
