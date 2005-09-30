@@ -1,7 +1,7 @@
 OCAMLPACKAGES = "str extlib"
 
 # defs
-INCDIRS  = -I../arch/i386/include -I../../boot/i386/include -I../../run/i386/include
+INCDIRS  = -I../arch/$(ARCH)/include -I../../boot/i386/include -I../../run/$(ARCH)/include
 CFLAGS  += -ansi -Wall -Os -fomit-frame-pointer
 CPPFLAGS += -DCAML_NAME_SPACE $(INCDIRS) -I$(CAMLLIB)
 OCAMLINCDIRS = -I ..

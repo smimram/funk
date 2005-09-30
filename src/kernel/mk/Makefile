@@ -2,7 +2,7 @@ OCAMLPACKAGES = "str extlib"
 
 # defs
 CFLAGS  += -ansi -Wall -Os -fomit-frame-pointer
-INCDIRS  = -Iarch/i386/include
+INCDIRS  = -Iarch/$(ARCH)/include
 OCAMLINCDIRS = 
 LDFLAGS = 
 
@@ -34,6 +34,7 @@ OCAMLKERNEL = ocamlmkkernel.o
 all: $(OCAMLKERNEL)
 
 $(OCAMLKERNEL): $(EXT_CMI) $(EXT_CMX) $(KERN_CMX)
+	@make -C arch/$(ARCH)
 	for subdir in $(SUBDIRS) ; do make RELDIR=$(RELDIR)$$subdir/ -C $$subdir ; done
 	make RELDIR=$(RELDIR)../../drivers/ -C ../../drivers
 	@echo "[LD]    $(RELDIR)$@"
@@ -42,6 +43,7 @@ $(OCAMLKERNEL): $(EXT_CMI) $(EXT_CMX) $(KERN_CMX)
 clean:
 	@echo "Cleaning $(RELDIR)"
 	rm -rf *.cm* *.o $(OCAMLKERNEL)
+	@make -C arch/$(ARCH) clean
 	for subdir in $(SUBDIRS) ; do make RELDIR=$(RELDIR)$$subdir/ -C $$subdir clean ; done
 	make RELDIR=$(RELDIR)../../drivers/ -C ../../drivers clean
 
