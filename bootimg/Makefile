@@ -41,22 +41,22 @@ clean:
 	rm -rf $(IMG)
 
 qemu: $(IMG)
-	$(QEMU) -dummy-net -fda funk.img -hda funk.img -boot a -m 16M
+	$(QEMU) -net none -fda funk.img -hda funk.img -boot a -m 16M
 
 qemugdb: $(IMG)
-	$(QEMU) -dummy-net -fda funk.img -hda funk.img -boot a -m 16M -s &
+	$(QEMU) -net none -fda funk.img -hda funk.img -boot a -m 16M -s &
 	sleep 1 
 	xterm -e gdb $(KERNEL) -x gdbinit
 
 qemu-x86_64: $(IMG)
-	$(QEMU)-system-x86_64 -dummy-net -fda funk.img -hda funk.img -boot a -m 16M
+	$(QEMU)-system-x86_64 -net none -fda funk.img -hda funk.img -boot a -m 16M
 
 qemulogs: $(IMG)
-	$(QEMU) -dummy-net -fda funk.img -boot a -m 16M \
+	$(QEMU) -net none -fda funk.img -boot a -m 16M \
 	        -d out_asm,in_asm,op,op_opt,int,exec,cpu,pcall
 
 qemuconsole: $(IMG)
-	$(QEMU) -dummy-net -fda funk.img -hda funk.img -boot a -m 16M -nographic
+	$(QEMU) -net none -fda funk.img -hda funk.img -boot a -m 16M -nographic
 
 qemunet: $(IMG)
 	$(QEMU) -fda funk.img -hda funk.img -boot a -m 16M \
