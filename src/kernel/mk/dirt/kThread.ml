@@ -1,13 +1,15 @@
 (** The type of thread handles. *)
 type t = nativeint
 
+type kthread = t
+
 (** Return the thread currently executing. *)
 external self : unit -> t = "caml_funk_kthread_self"
-  
+
 external id : t -> int = "caml_funk_kthread_id"
-    
+
 external create : ('a -> unit) -> 'a -> nativeint = "caml_funk_create_kthread"
-              
+
 external _yield : unit -> unit = "caml_funk_kthread_yield"
 
 let yield () =
@@ -22,7 +24,7 @@ external wake : nativeint -> unit = "caml_funk_kthread_wake"
 
 module Semaphore =
 struct
-  type t = { mutable num: int; mutable waiting: KThread.t list }
+  type t = { mutable num: int; mutable waiting: kthread list }
 
   let create num = { num = num; waiting = [] }
 
