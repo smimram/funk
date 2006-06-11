@@ -1125,7 +1125,10 @@ struct rusage {
 
 int getrusage(int who, struct rusage* usage)
 {
-  return -1;
+#ifdef DEBUG
+    c_printf("getrusage(%i,%p) called\n",who,usage);
+#endif
+    return notImpl_int();
 }
 
 static const char _nl_C_LC_CTYPE_class[768] /* attribute_hidden */ =
