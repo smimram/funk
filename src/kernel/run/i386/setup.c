@@ -182,10 +182,10 @@ idt_contents[IDT_SIZE],
 /** System idt register value. */
 static struct system_table
 {
-  short int padding;
   unsigned short int limit;
   unsigned int base_addr;
-}
+  short int padding;
+} __attribute__((packed))
 system_table =
 {
   .limit     = sizeof(gdt_contents)-1,
@@ -202,7 +202,7 @@ void setup_kernel()
   setup_pagination();
 
   /* Load the gdt register. */
-  __asm__ __volatile__("lgdt %0" : : "m" (system_table.limit));
+  __asm__ __volatile__("lgdt %0" : : "m" (system_table));
   /* Update the segment registers. */
   __asm__ __volatile__("\
       movw %w0, %%ds; \
@@ -260,7 +260,7 @@ void setup_idt()
     SETINT(i, irqs[i - SLAVE_VECT + 8]);
   SETINT(SYSCALL_VECT, syscall_handler);
   /* Load the idt register. */
-  __asm__ __volatile__("lidt %0" : : "m" (idt_table.limit));
+  __asm__ __volatile__("lidt %0" : : "m" (idt_table));
   __asm__ __volatile__("sti");
   map_page_range(page_directory, 0, FRAME_SIZE, 0, 0); /* No more *NULL, niark niark... */
 }
