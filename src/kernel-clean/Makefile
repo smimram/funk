@@ -1,6 +1,6 @@
 .PHONY: all libcaml kernel mk run boot clean
 
-ARCH    = $(shell arch)
+ARCH    = $(shell uname -m)
 VERSION = $(shell cat ../../VERSION)
 CAMLLIB = $(shell ocamlc -where)
 KERNEL  = funk-$(ARCH)-$(VERSION)

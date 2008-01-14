@@ -29,7 +29,7 @@
 # general definitions
 #####################
 
-ARCH    = $(shell arch)
+ARCH    = $(shell uname -m)
 VERSION = $(shell cat ../../VERSION)
 KERNEL  = funk-$(ARCH)-$(VERSION)
 CAMLLIB = $(shell ocamlc -where)
