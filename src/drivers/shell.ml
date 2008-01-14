@@ -58,7 +58,7 @@ exception Wrong_arg_nb
 let () =
   Hashtbl.add cmds "beep" (fun ctx -> function freq::duration::_ -> Sound.beep (int_of_string freq) (int_of_string duration) | _ -> raise Wrong_arg_nb);
   Hashtbl.add cmds "clear" (fun ctx _ -> Console.clear (Console.get_current_console()));
-  Hashtbl.add cmds "dmesg" (fun ctx _ -> Printf.printf "%s%!" (Filecmds.cat_from_file ctx "dmesg"));
+  Hashtbl.add cmds "dmesg" (fun ctx _ -> Printf.printf "%s%!" (Filecmds.cat_from_file ctx "/dmesg"));
   Hashtbl.add cmds "date" (fun ctx _ -> Printf.printf "%d brouzoufs elapsed since boot.\n%!" (Funk.gettimeofday ()));
   Hashtbl.add cmds "exception" (fun ctx -> function e::_ -> raise (Invalid_argument e) | _ -> raise Wrong_arg_nb);
   Hashtbl.add cmds "exit" (fun ctx _ -> KThread.exit ());
