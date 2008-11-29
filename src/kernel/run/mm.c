@@ -13,7 +13,7 @@
  * ------------------
  * An entry that tells about where a page points to, and its attributes:
  * 
- *  31..............12 11...9 8...7    6 5 4...3    2   1   0
+ *  63/31...........12 11...9 8...7    6 5 4...3    2   1   0
  *  Page frame address Avail  Reserved D A Reserved U/S R/W Present
  *
  * Page frame address = Physical address of memory (either the physical address of the page, or the physical address of the page table)
@@ -25,33 +25,43 @@
  * R/W = Read or read and write
  **/
 
-/* unsigned long __attribute__((section(".bss.page_aligned"))) page_directory[PAGE_DIR_LEN]; */
-
+#ifdef __i386__
 #define PAGE_ADDR(x)		(x & 0xfffff000)
+#endif
+#ifdef __x86_64__
+#define PAGE_ADDR(x)		(x & 0xfffffffffffff000)
+#endif
 #define PGD_ENTRY_NB(va)	(va / (FRAME_SIZE * PAGE_TABLE_LEN))
-#define BGT_ENTYR_NB(va)	((va / FRAME_SIZE) % PAGE_TABLE_LEN)
+#define BGT_ENTRY_NB(va)	((va / FRAME_SIZE) % PAGE_TABLE_LEN)
 
-unsigned long* new_page_dir()
+#ifdef __x86_64__
+static unsigned long* new_page_top()
+{
+  unsigned long *ans = malloc_frame_aligned(PAGE_TOP_LEN * sizeof(long));
+  memset(ans, 0, PAGE_TOP_LEN * sizeof(long));
+  return ans;
+}
+
+static unsigned long* new_page_med()
+{
+  unsigned long *ans = malloc_frame_aligned(PAGE_MED_LEN * sizeof(long));
+  memset(ans, 0, PAGE_MED_LEN * sizeof(long));
+  return ans;
+}
+#endif
+
+static unsigned long* new_page_dir()
 {
   unsigned long *ans = malloc_frame_aligned(PAGE_DIR_LEN * sizeof(long));
   memset(ans, 0, PAGE_DIR_LEN * sizeof(long));
   return ans;
 }
 
-unsigned long* new_page_table()
+static unsigned long* new_page_table()
 {
   unsigned long *ans = malloc_frame_aligned(PAGE_TABLE_LEN * sizeof(long));
   memset(ans, 0, PAGE_TABLE_LEN * sizeof(long));
   return ans;
-}
-
-static void may_alloc_dir_entry(unsigned long *pgd, int n, int attr)
-{
-  if (PAGE_ADDR(pgd[n]) == 0)
-  {
-    /* TODO: use attr? */
-    pgd[n] = (unsigned long)new_page_table() | 3;
-  }
 }
 
 /**
@@ -59,12 +69,16 @@ static void may_alloc_dir_entry(unsigned long *pgd, int n, int attr)
  *
  * virt_addr and len are supposed to be multiples of FRAME_SIZE.
  **/
-void map_page_range(unsigned long *pgd, unsigned long phys_addr, unsigned long len, unsigned long virt_addr, int attr)
+void map_page_range(unsigned long *base, unsigned long phys_addr, unsigned long len, unsigned long virt_addr, int attr)
 {
   int i, istart;
+#ifdef __x86_64__
+  unsigned long *top = NULL, *med = NULL;
+  int i4, i3;
+#endif
+  unsigned long *dir = NULL, *pgt = NULL;
+  int i2, i1;
   unsigned long addr; /* Current physical address. */
-  unsigned long *pgt; /* Current page table. */
-  int pgde; /* Number of page dir entry. */
 
   /* Be sure that addr is a multiple of FRAME_SIZE. */
   if (virt_addr % FRAME_SIZE != 0)
@@ -72,36 +86,95 @@ void map_page_range(unsigned long *pgd, unsigned long phys_addr, unsigned long l
     phys_addr -= virt_addr % FRAME_SIZE;
     virt_addr -= virt_addr % FRAME_SIZE;
   }
-  pgde = virt_addr / PAGE_DIR_ENTRY_SIZE;
   /* Same thing for len. */
   if (len % FRAME_SIZE != 0)
   {
     len += FRAME_SIZE - (len % FRAME_SIZE);
   }
   addr = phys_addr;
-  
-  /* Starting in the middle of a page dir entry? */
-  if (virt_addr % PAGE_DIR_ENTRY_SIZE != 0)
-  {
-    may_alloc_dir_entry(pgd, pgde, attr);
-  }
-  pgt = (unsigned long*)PAGE_ADDR(pgd[pgde]);
+
   istart = virt_addr / FRAME_SIZE;
-  if (istart % PAGE_TABLE_LEN == 0)
-    pgde--;
+#ifdef __x86_64__
+  top = base;
+  i4 = istart/PAGE_TOP_SPAN;
+  i3 = (istart/PAGE_MED_SPAN)%PAGE_MED_LEN;
+#else
+  dir = base;
+#endif
+  i2 = (istart/PAGE_DIR_SPAN)%PAGE_DIR_LEN;
+  i1 = (istart/PAGE_TABLE_SPAN)%PAGE_TABLE_LEN;
+
   for (i = istart; (i - istart) * FRAME_SIZE < len; i++)
   {
-    if (i % PAGE_TABLE_LEN == 0)
+#ifdef __x86_64__
+    if (!med)
     {
-      pgde++;
-      may_alloc_dir_entry(pgd, pgde, attr);
-      pgt = (unsigned long*)PAGE_ADDR(pgd[pgde]);
+      if (top[i4] & 1)
+        med = (unsigned long*)PAGE_ADDR(top[i4]);
+      else
+      {
+        med = new_page_med();
+        top[i4] = (unsigned long) med | 3;
+      }
+    }
+    if (!dir)
+    {
+      if (med[i3] & 1)
+        dir = (unsigned long*)PAGE_ADDR(med[i3]);
+      else
+      {
+        dir = new_page_dir();
+        med[i3] = (unsigned long) med | 3;
+      }
+    }
+#endif
+    if (!pgt)
+    {
+      if (dir[i2] & 1)
+        pgt = (unsigned long*)PAGE_ADDR(dir[i2]);
+      else
+      {
+        pgt = new_page_table();
+        dir[i2] = (unsigned long) pgt | 3;
+      }
     }
 #ifdef TEST
-    printf("pgte: %04d   pgt:%p   pgde: %d   addr: %p\n", i % PAGE_TABLE_LEN, pgt, pgde, (void*)addr);
+    printf("i %d ", i);
+#ifdef __x86_64__
+    printf("top %p:%d med %p:%d ", top, i4, med, i3);
 #endif
-    pgt[i % PAGE_TABLE_LEN] = addr | attr;
+    printf("dir %p:%d pgt %p:%d addr: %p\n", dir, i2, pgt, i1, (void*)addr);
+#endif
+    pgt[i1] = addr | attr;
     addr += FRAME_SIZE;
+    i1++;
+    if (i1 == PAGE_TABLE_LEN)
+    {
+      i1 = 0;
+      pgt = NULL;
+      i2++;
+      if (i2 == PAGE_DIR_LEN)
+      {
+        i2 = 0;
+#ifdef __x86_64__
+        dir = NULL;
+        i3++;
+        if (i3 ==  PAGE_MED_LEN)
+        {
+          i3 = 0;
+          med = NULL;
+          i4++;
+          if (i4 ==  PAGE_TOP_LEN)
+          {
+            i4 = 0;
+            printf("uh, i4 looped ?!\n");
+          }
+        }
+#else
+        printf("uh, i2 looped ?!\n");
+#endif
+      }
+    }
   }
 }
 
@@ -119,10 +192,14 @@ void set_page_range_attr(unsigned long *pgd, unsigned long virt_addr, unsigned l
 
 void setup_pagination()
 {
-  page_directory = new_page_dir();
+#ifdef __x86_64__
+  page_base = new_page_top();
+#else
+  page_base = new_page_dir();
+#endif
 
-  map_page_range(page_directory, 0, MEM_SIZE, 0, 3);
-  set_page_range_attr(page_directory, (unsigned long)&_begin, &_ro_end - &_begin, 1);
+  map_page_range(page_base, 0, MEM_SIZE, 0, 3);
+  set_page_range_attr(page_base, (unsigned long)&_begin, &_ro_end - &_begin, 1);
 
   /* Fill the page table. */
   /* for(i = 0; i < ((MEM_SIZE + FRAME_SIZE - 1) / FRAME_SIZE); i++)
@@ -134,18 +211,27 @@ void setup_pagination()
   /* Fill the the Page Directory Entries. */
   /* for(i = 0; i < (((MEM_SIZE + FRAME_SIZE - 1) / FRAME_SIZE) + PAGE_TABLE_LEN - 1) / PAGE_TABLE_LEN; i++)
   {
-    page_directory[i] = (unsigned long)(page_table + i * PAGE_TABLE_LEN) | 3;
+    page_base[i] = (unsigned long)(page_table + i * PAGE_TABLE_LEN) | 3;
   };
   for(; i < PAGE_DIR_LEN; i++)
   {
-    page_directory[i] = 0;
+    page_base[i] = 0;
   } */
 
   /* Put the page directory address into CR3.
    * and enable paging (set bit 31 of CR0 to 1). */
+#ifdef __x86_64__
+  __asm__ __volatile__("\
+      movq %0, %%cr3; \
+      movq %%cr0, %%rax;\
+      orl $0x80000000, %%eax;\
+      movq %%rax, %%cr0" : :"r"(page_base) : "rax", "memory");
+#endif
+#ifdef __i386__
   __asm__ __volatile__("\
       movl %0, %%cr3; \
       movl %%cr0, %%eax;\
       orl $0x80000000, %%eax;\
-      movl %%eax, %%cr0" : :"r"(page_directory) : "%eax", "memory");
+      movl %%eax, %%cr0" : :"r"(page_base) : "eax", "memory");
+#endif
 }
