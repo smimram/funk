@@ -262,7 +262,7 @@ void setup_idt()
   /* Load the idt register. */
   __asm__ __volatile__("lidt %0" : : "m" (idt_table));
   __asm__ __volatile__("sti");
-  map_page_range(page_directory, 0, FRAME_SIZE, 0, 0); /* No more *NULL, niark niark... */
+  map_page_range(page_top, 0, FRAME_SIZE, 0, 0); /* No more *NULL, niark niark... */
 }
 
 CAMLprim value caml_funk_setup_idt(value unit)

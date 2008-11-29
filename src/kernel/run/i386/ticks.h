@@ -25,16 +25,11 @@
 #ifndef __TICKS_H
 #define __TICKS_H
 
-typedef union {
+typedef struct {
   unsigned long long tick;
-  struct {
-    unsigned long low;
-    unsigned long high;
-  } sub;
 } tick_t;
 
-#define ticks(tick) __asm__ __volatile__("rdtsc" : "=a" \
-                ((tick).sub.low),"=d" ((tick).sub.high));
+#define ticks(_tick) __asm__ __volatile__("rdtsc" : "=A" ((_tick).tick))
 
 #endif /* __TICKS_H */
 
