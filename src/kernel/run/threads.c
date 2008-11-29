@@ -178,7 +178,7 @@ void sched_switch(thread *prev, thread *next)
         movl %%esp,%0 ; \
         movl %1,%%esp ; \
 	" : : "rm" (prev->esp), "rm" (next->esp) :
-	"ebx", "ecx", "edx", "esi", "edi", "ebp", "cc", "memory");
+	"ebp", "cc", "memory");
 
   if (todelete) {
     free(todelete->stack);
