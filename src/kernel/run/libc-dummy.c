@@ -357,6 +357,22 @@ void *realloc(void *ptr, size_t size)
   return ans;
 }
 
+void *calloc(size_t nb, size_t size)
+{
+#ifdef DEBUG
+  c_printf("calloc(%u,%u) called\n",nb,size);
+#endif
+  size_t totsize = nb * size;
+  void *ptr;
+  if (totsize < nb || totsize < size)
+    return NULL;
+
+  ptr = malloc(totsize);
+  if (ptr)
+    memset(ptr, 0, totsize);
+  return ptr;
+}
+
 /* Signals */
 
 #define sigset_t int
@@ -458,6 +474,8 @@ int sscanf(const char *str, const char *format, ...)
 }
 
 static char buf[1024];
+
+/* Note: these are *used* by the caml runtime for internal display. Exception printing for instance, so *don't* remove them */
 
 int printf(const char *fmt, ...)
 {
@@ -846,6 +864,16 @@ long int __strtol_internal(const char *__nptr,char **__endptr,
   return LONG_MIN;
 }
 
+long int strtol(const char *nptr,char **endptr,
+			   int base)
+{
+#ifdef DEBUG
+  c_printf("strtol(%s,%p,%i) called\n",nptr,endptr,base);
+#endif
+  errno = ERANGE;
+  return LONG_MIN;
+}
+
 double __strtod_internal(const char *__nptr,char **__endptr,int __group)
 {
 #ifdef DEBUG
@@ -855,132 +883,120 @@ double __strtod_internal(const char *__nptr,char **__endptr,int __group)
   return HUGE_VAL;
 }
 
+double strtod(const char *nptr,char **endptr)
+{
+#ifdef DEBUG
+  c_printf("__strtod_internal(%s,%p) called\n",nptr,endptr);
+#endif
+  errno = ERANGE;
+  return HUGE_VAL;
+}
+
 /* Trigo */
 
 double exp(double x)
 {
-  notImpl_fp();
+  return __builtin_exp(x);
 }
 
 double frexp(double x, int *exp)
 {
-  notImpl_fp();
+  return __builtin_frexp(x, exp);
 }
 
 double ldexp(double x, int exp)
 {
-  notImpl_fp();
+  return __builtin_ldexp(x, exp);
 }
 
 double log(double x)
 {
-  notImpl_fp();
+  return __builtin_log(x);
 }
 
 double log10(double x)
 {
-  notImpl_fp();
+  return __builtin_log10(x);
 }
 
 double modf(double x, double *iptr)
 {
-  notImpl_fp();
+  return __builtin_modf(x, iptr);
 }
 
 double sqrt(double x)
 {
-  notImpl_fp();
+  return __builtin_sqrt(x);
 }
 
 double pow(double x, double y)
 {
-  notImpl_fp();
-}
-
-#  define __sincos_code \
-  register long double __cosr;                                                \
-  register long double __sinr;                                                \
-  __asm __volatile__                                                          \
-    ("fsincos\n\t"                                                            \
-     "fnstsw    %%ax\n\t"                                                     \
-     "testl     $0x400, %%eax\n\t"                                            \
-     "jz        1f\n\t"                                                       \
-     "fldpi\n\t"                                                              \
-     "fadd      %%st(0)\n\t"                                                  \
-     "fxch      %%st(1)\n\t"                                                  \
-     "2: fprem1\n\t"                                                          \
-     "fnstsw    %%ax\n\t"                                                     \
-     "testl     $0x400, %%eax\n\t"                                            \
-     "jnz       2b\n\t"                                                       \
-     "fstp      %%st(1)\n\t"                                                  \
-     "fsincos\n\t"                                                            \
-     "1:"                                                                     \
-     : "=t" (__cosr), "=u" (__sinr) : "0" (__x));                             \
-  *__sinx = __sinr;                                                           \
-  *__cosx = __cosr
-
-void __sincos (double __x, double *__sinx, double *__cosx)
-{
-  __sincos_code;
+  return __builtin_pow(x, y);
 }
 
 double sin(double x)
 {
-  double ans, dummy;
-  __sincos(x, &ans, &dummy);
-  return (ans);
+  return __builtin_sin(x);
 }
 
 double sinh(double x)
 {
-  notImpl_fp();
+  return __builtin_sinh(x);
 }
 
 double cos(double x)
 {
-  double ans, dummy;
-  __sincos(x, &dummy, &ans);
-  return (ans);
+  return __builtin_cos(x);
 }
 
 double cosh(double x)
 {
-  notImpl_fp();
+  return __builtin_cosh(x);
 }
 
 double tan(double x)
 {
-  return (sin(x)/cos(x));
+  return __builtin_tan(x);
 }
 
 double tanh(double x)
 {
-  notImpl_fp();
+  return __builtin_tanh(x);
 }
 
 double asin(double x)
 {
-  notImpl_fp();
+  return __builtin_asin(x);
 }
 
 double acos(double x)
 {
-  notImpl_fp();
+  return __builtin_acos(x);
 }
 
 double atan(double x)
 {
-  notImpl_fp();
+  return __builtin_atan(x);
 }
 
 double atan2 (double y, double x)
 {
-  notImpl_fp();
+  return __builtin_atan2(y, x);
 }
 
 double fmod (double x, double y)
 {
-  notImpl_fp();
+  return __builtin_fmod(y, x);
+}
+
+double ceil (double x)
+{
+  return __builtin_ceil(x);
+}
+
+double floor (double x)
+{
+  return __builtin_floor(x);
 }
 
 /* DL */

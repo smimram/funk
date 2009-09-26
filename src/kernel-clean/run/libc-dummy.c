@@ -262,6 +262,8 @@ void free (void* ptr)
 /*#ifdef DEBUG*/
   c_printf ("calling free %p\n", ptr);
 /*#endif*/
+  if (!ptr)
+    return;
   /* find out if we should merge two empty spaces */
   for (cur = *(void**) (heap + HEAP_OFFSET); *(void**)(cur - 2*s) < ptr; cur = *(void**)(cur - 2*s))
     if (cur + *(int*) (cur - s) + s == ptr)
@@ -355,6 +357,22 @@ void *realloc(void *ptr, size_t size)
   return ans;
 }
 
+void *calloc(size_t nb, size_t size)
+{
+#ifdef DEBUG
+  c_printf("calloc(%u,%u) called\n",nb,size);
+#endif
+  size_t totsize = nb * size;
+  void *ptr;
+  if (totsize < nb || totsize < size)
+    return NULL;
+
+  ptr = malloc(totsize);
+  if (ptr)
+    memset(ptr, 0, totsize);
+  return ptr;
+}
+
 /* Signals */
 
 #define sigset_t int
@@ -424,7 +442,8 @@ int sigaltstack(const stack_t *ss, stack_t *oss)
 #ifdef DEBUG
   c_printf("sigaltstack(%p,%p) called\n",ss,oss);
 #endif
-  memcpy(oss,&sigstack,sizeof(*oss));
+  if (oss)
+    memcpy(oss,&sigstack,sizeof(*oss));
   memcpy(&sigstack,ss,sizeof(stack_t));
   return 0;
 }
@@ -845,6 +864,16 @@ long int __strtol_internal(const char *__nptr,char **__endptr,
   return LONG_MIN;
 }
 
+long int strtol(const char *nptr,char **endptr,
+			   int base)
+{
+#ifdef DEBUG
+  c_printf("strtol(%s,%p,%i) called\n",nptr,endptr,base);
+#endif
+  errno = ERANGE;
+  return LONG_MIN;
+}
+
 double __strtod_internal(const char *__nptr,char **__endptr,int __group)
 {
 #ifdef DEBUG
@@ -854,132 +883,120 @@ double __strtod_internal(const char *__nptr,char **__endptr,int __group)
   return HUGE_VAL;
 }
 
+double strtod(const char *nptr,char **endptr)
+{
+#ifdef DEBUG
+  c_printf("__strtod_internal(%s,%p) called\n",nptr,endptr);
+#endif
+  errno = ERANGE;
+  return HUGE_VAL;
+}
+
 /* Trigo */
 
 double exp(double x)
 {
-  notImpl_fp();
+  return __builtin_exp(x);
 }
 
 double frexp(double x, int *exp)
 {
-  notImpl_fp();
+  return __builtin_frexp(x, exp);
 }
 
 double ldexp(double x, int exp)
 {
-  notImpl_fp();
+  return __builtin_ldexp(x, exp);
 }
 
 double log(double x)
 {
-  notImpl_fp();
+  return __builtin_log(x);
 }
 
 double log10(double x)
 {
-  notImpl_fp();
+  return __builtin_log10(x);
 }
 
 double modf(double x, double *iptr)
 {
-  notImpl_fp();
+  return __builtin_modf(x, iptr);
 }
 
 double sqrt(double x)
 {
-  notImpl_fp();
+  return __builtin_sqrt(x);
 }
 
 double pow(double x, double y)
 {
-  notImpl_fp();
-}
-
-#  define __sincos_code \
-  register long double __cosr;                                                \
-  register long double __sinr;                                                \
-  __asm __volatile__                                                          \
-    ("fsincos\n\t"                                                            \
-     "fnstsw    %%ax\n\t"                                                     \
-     "testl     $0x400, %%eax\n\t"                                            \
-     "jz        1f\n\t"                                                       \
-     "fldpi\n\t"                                                              \
-     "fadd      %%st(0)\n\t"                                                  \
-     "fxch      %%st(1)\n\t"                                                  \
-     "2: fprem1\n\t"                                                          \
-     "fnstsw    %%ax\n\t"                                                     \
-     "testl     $0x400, %%eax\n\t"                                            \
-     "jnz       2b\n\t"                                                       \
-     "fstp      %%st(1)\n\t"                                                  \
-     "fsincos\n\t"                                                            \
-     "1:"                                                                     \
-     : "=t" (__cosr), "=u" (__sinr) : "0" (__x));                             \
-  *__sinx = __sinr;                                                           \
-  *__cosx = __cosr
-
-void __sincos (double __x, double *__sinx, double *__cosx)
-{
-  __sincos_code;
+  return __builtin_pow(x, y);
 }
 
 double sin(double x)
 {
-  double ans, dummy;
-  __sincos(x, &ans, &dummy);
-  return (ans);
+  return __builtin_sin(x);
 }
 
 double sinh(double x)
 {
-  notImpl_fp();
+  return __builtin_sinh(x);
 }
 
 double cos(double x)
 {
-  double ans, dummy;
-  __sincos(x, &dummy, &ans);
-  return (ans);
+  return __builtin_cos(x);
 }
 
 double cosh(double x)
 {
-  notImpl_fp();
+  return __builtin_cosh(x);
 }
 
 double tan(double x)
 {
-  return (sin(x)/cos(x));
+  return __builtin_tan(x);
 }
 
 double tanh(double x)
 {
-  notImpl_fp();
+  return __builtin_tanh(x);
 }
 
 double asin(double x)
 {
-  notImpl_fp();
+  return __builtin_asin(x);
 }
 
 double acos(double x)
 {
-  notImpl_fp();
+  return __builtin_acos(x);
 }
 
 double atan(double x)
 {
-  notImpl_fp();
+  return __builtin_atan(x);
 }
 
 double atan2 (double y, double x)
 {
-  notImpl_fp();
+  return __builtin_atan2(y, x);
 }
 
 double fmod (double x, double y)
 {
-  notImpl_fp();
+  return __builtin_fmod(y, x);
+}
+
+double ceil (double x)
+{
+  return __builtin_ceil(x);
+}
+
+double floor (double x)
+{
+  return __builtin_floor(x);
 }
 
 /* DL */
@@ -1082,6 +1099,33 @@ int getrlimit64(__rlimit_resource_t __resource,struct rlimit *__rlimits)
 {
 #ifdef DEBUG
   c_printf("getrlimit64(%i,%p) called\n",__resource,__rlimits);
+#endif
+  return notImpl_int();
+}
+
+struct rusage {
+  struct timeval ru_utime; /* user time used */
+  struct timeval ru_stime; /* system time used */
+  long   ru_maxrss;        /* maximum resident set size */
+  long   ru_ixrss;         /* integral shared memory size */
+  long   ru_idrss;         /* integral unshared data size */
+  long   ru_isrss;         /* integral unshared stack size */
+  long   ru_minflt;        /* page reclaims */
+  long   ru_majflt;        /* page faults */
+  long   ru_nswap;         /* swaps */
+  long   ru_inblock;       /* block input operations */
+  long   ru_oublock;       /* block output operations */
+  long   ru_msgsnd;        /* messages sent */
+  long   ru_msgrcv;        /* messages received */
+  long   ru_nsignals;      /* signals received */
+  long   ru_nvcsw;         /* voluntary context switches */
+  long   ru_nivcsw;        /* involuntary context switches */
+};
+
+int getrusage(int who, struct rusage* usage)
+{
+#ifdef DEBUG
+  c_printf("getrusage(%i,%p) called\n",who,usage);
 #endif
   return notImpl_int();
 }
