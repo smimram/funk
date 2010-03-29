@@ -26,13 +26,15 @@ currently working:
 - CPU detection
 - PCI devices detection
 
+Some of the x86_64 port has been done (notable PAE support), but is still
+missing some initialization bits, so doesn't even build yet.
 
 Prerequisities
 ==============
 
 To compile the kernel you will need:
 
-- OCaml 3.08
+- OCaml 3.11
 - findlib
 - extlib
 - mcopy
@@ -49,7 +51,8 @@ Testing the kernel
 
 To test the kernel you must
 
-1. build the kernel
+1. build the kernel (on an 32bit i386 system only, that can not work on a 64bit
+x86_64 system for now).
 
 make
 
