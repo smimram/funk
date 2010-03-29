@@ -472,6 +472,13 @@ int sscanf(const char *str, const char *format, ...)
 #endif
   return notImpl_int();
 }
+int __isoc99_sscanf(const char *str, const char *format, ...)
+{
+#ifdef DEBUG
+  c_printf("__isoc99_sscanf(%s,%s) called\n",str,format);
+#endif
+  return notImpl_int();
+}
 
 static char buf[1024];
 
@@ -886,10 +893,17 @@ double __strtod_internal(const char *__nptr,char **__endptr,int __group)
 double strtod(const char *nptr,char **endptr)
 {
 #ifdef DEBUG
-  c_printf("__strtod_internal(%s,%p) called\n",nptr,endptr);
+  c_printf("strtod(%s,%p) called\n",nptr,endptr);
 #endif
   errno = ERANGE;
   return HUGE_VAL;
+}
+
+/* Float */
+int __fpclassify(double x)
+{
+  c_printf("fpclassify called\n");
+  return -1;
 }
 
 /* Trigo */
